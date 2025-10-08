@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# check if $1 contains a valid line number
+re='^[0-9]+$'
+input_number=$1
+if ! [[ $1 =~ $re ]] ; then
+    # set default to first line
+    input_number=1
+fi
+
+# compute the line number to extract (from the docker ps -a command)
+extract_line=$(($input_number+1))
+
+# extract the container id
+ContainerId=`docker ps -a | awk -v env_var="$extract_line" 'NR==env_var' | awk '{print $1}'`
+
+# container id check
+if [ ! -z "$ContainerId" ]
+then
+    echo -e "\n\tOpening bash shell into container id [$ContainerId]\n"
+else
+    echo -e "\n\tcannot extract a valid container id from line $1\n"
+    exit 1
+fi
+
+# run docker exec command
+docker exec -it $ContainerId /bin/bash

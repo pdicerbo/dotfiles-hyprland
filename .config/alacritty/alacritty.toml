@@ -1,0 +1,59 @@
+[window]
+dimensions = { columns = 185, lines = 55 }
+title = "Alacritty"
+opacity = 0.85
+decorations = "None"
+
+[font]
+size = 8.0
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+offset = { x = 1, y = 0 }
+
+[cursor]
+style = { shape = "Underline", blinking = "Always" }
+unfocused_hollow = false
+thickness = 0.15
+vi_mode_style = "None"
+blink_interval = 400
+
+[colors]
+draw_bold_text_with_bright_colors = true
+cursor = { text = "#0B9DED", cursor = "#0B9DED" }
+
+[colors.primary]
+foreground = "#c5c8c6"
+background = "#111315"
+bright_foreground = "#add1ff"
+dim_foreground = "#95b6c8"
+
+[colors.normal]
+black   = "#1c1e21"
+red     = "#cc5d56"
+green   = "#42885d"
+yellow  = "#fba268"
+blue    = "#5081ed"
+magenta = "#3b8fcf"
+cyan    = "#00bae9"
+white   = "#95b6c8"
+
+[colors.bright]
+black   = "#969896"
+red     = "#cc160b"
+green   = "#07a124"
+yellow  = "#fb6300"
+blue    = "#175aed"
+magenta = "#0b69c7"
+cyan    = "#0b9ded"
+white   = "#add1ff"
+
+[mouse]
+hide_when_typing = true
+
+[selection]
+save_to_clipboard = true
+
+[env]
+TERM = "xterm-256color"
+#
+# Xcursor size must be set globally, not per-terminal
+# Xcursor.size = 10

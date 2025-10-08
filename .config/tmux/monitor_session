@@ -1,0 +1,46 @@
+unbind C-b
+set -g prefix C-Space
+bind C-Space send-prefix
+
+set -g base-index 1
+setw -g pane-base-index 1
+set -g renumber-windows on
+
+set -g mouse off
+
+# Status line colors
+set -g status-bg "color4"         # blue background
+set -g status-fg "color7"         # gray text color
+set -g status-right "%l:%M %p"    # time format
+set-window-option -g window-status-current-style "bg=color75,fg=color231 bold"    # current window background + foreground colors
+
+# Custom Keys
+bind-key "|" split-window -h -c "#{pane_current_path}"
+bind-key "\\" split-window -fh -c "#{pane_current_path}"
+
+bind-key "-" split-window -v -c "#{pane_current_path}"
+bind-key "_" split-window -fv -c "#{pane_current_path}"
+
+# kill and motion keys
+bind-key Q kill-session
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# force a reload of the config file
+unbind r
+bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded tmux config!"
+
+bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xsel -i --clipboard"
+bind-key -T copy-mode y send-keys -X copy-pipe-and-cancel "xsel -i --clipboard"
+bind-key C-y run "xsel -o --clipboard | tmux load-buffer - ; tmux paste-buffer"
+
+new
+neww   -n monitor btop
+splitw -h -p 30 sudo iotop -o
+splitw -fv atop
+splitw -h -p 30 sudo iftop
+select-pane -t 1
+
+kill-window -t :1

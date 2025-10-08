@@ -1,0 +1,39 @@
+gui:
+  authorColors:
+    'Pierluigi Di Cerbo': 'blue'
+git:
+  autoStageResolvedConflicts: false
+  mainBranches:
+    - master
+  autoFetch: false
+  autoRefresh: false
+  branchLogCmd: git log --graph --color=always --abbrev-commit --decorate --pretty=medium {{branchName}} --oneline
+  log:
+    showWholeGraph: true
+  autoForwardBranches: none
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never --side-by-side
+customCommands:
+  - key: 'a'
+    context: 'tags'
+    command: "git for-each-ref refs/tags/{{.SelectedTag.Name}} --format='%(contents)'"
+    output: popup
+    outputTitle: "Tag Annotation"
+    description: "Show Tag Annotation"
+  - key: '<c-p>'
+    description: "Pull from a specific remote repository"
+    context: 'files'
+    loadingText: 'Pulling ...'
+    command: git pull {{ .Form.Remote }} {{ .Form.RemoteBranch }}
+    prompts:
+      - type: 'input'
+        key: 'Remote'
+        title: "Remote:"
+        suggestions:
+          preset: 'remotes'
+      - type: 'input'
+        key: 'RemoteBranch'
+        title: "Remote branch:"
+        suggestions:
+          command: "git branch --remote --list '{{.Form.Remote}}/*' --format='%(refname:short)' | sed 's/{{.Form.Remote}}\\///'"
