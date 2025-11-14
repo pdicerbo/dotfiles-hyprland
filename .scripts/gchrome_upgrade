@@ -1,0 +1,39 @@
+#!/bin/bash
+
+mkdir -p $HOME/Downloads
+cd $HOME/Downloads
+
+# download latest available version
+wget https://aur.archlinux.org/cgit/aur.git/snapshot/google-chrome.tar.gz
+
+# unpack downloaded package
+tar -xzf google-chrome.tar.gz
+
+if [ ! -d google-chrome ]
+then
+    echo -e "something wrong happens during package decompression\nexit.."
+    exit 42
+fi
+
+cd google-chrome
+
+# build package
+makepkg -s --noconfirm
+
+if [ ! -f google-chrome-*.pkg.tar.zst ]
+then
+    echo -e "something wrong happens during package construction\nexit.."
+    exit 42
+fi
+
+# install package
+sudo pacman --noconfirm -U google-chrome-*.pkg.tar.zst || {
+    echo -e "invalid or corrupted package (or wrong password inserted for three times...)\nexit"
+    exit 42
+}
+
+cd ..
+
+# cleaning...
+echo -e "\n removing compressed package and build folder"
+rm -rf google-chrome*

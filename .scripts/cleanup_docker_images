@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Get the list of images with <none> tag
+images=$(docker images --format "{{.Repository}} {{.Tag}} {{.ID}}" | grep "<none>")
+
+# Loop through each image and tag it with :torm, then remove it
+while IFS= read -r image; do
+    image_id=$(echo $image | awk '{print $3}')
+    docker tag $image_id $image_id:torm
+    docker rmi $image_id:torm
+done <<< "$images"
