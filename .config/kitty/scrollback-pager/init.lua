@@ -2,7 +2,6 @@ vim.cmd("set expandtab")
 vim.cmd("set tabstop=4")
 vim.cmd("set softtabstop=4")
 vim.cmd("set shiftwidth=4")
--- vim.cmd("set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20")
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
@@ -40,3 +39,41 @@ vim.keymap.set("n", "q", ":q<CR>")
 vim.keymap.set("n", "<leader>wl", "<cmd>set wrap!<CR>", { desc = "Toggle line wrap" })
 
 vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    if vim.v.shell_error ~= 0 then
+        vim.api.nvim_echo({
+            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+            { out, "WarningMsg" },
+            { "\nPress any key to exit..." },
+        }, true, {})
+        vim.fn.getchar()
+        os.exit(1)
+    end
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- Setup lazy.nvim
+require("lazy").setup(
+    {
+        -- Add plugins here, for example:
+        {
+            "typicode/bg.nvim", lazy = false
+        },
+    },
+    {
+        -- Lazy configuration
+        install = { colorscheme = { "default" } },
+        checker = { enabled = false },
+        performance = {
+            rtp = {
+                disabled_plugins = {
+                    "gzip", "matchit", "matchparen", "netrwPlugin", "tarPlugin", "tohtml", "tutor", "zipPlugin",
+                },
+            },
+        },
+    })
