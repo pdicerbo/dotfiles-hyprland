@@ -74,4 +74,9 @@ return {
         --     vim.cmd("colorscheme forest-night")
         -- end
     },
+
+    {
+        "typicode/bg.nvim",
+        lazy = false
+    },
 }

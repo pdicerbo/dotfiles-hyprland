@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-WALLPAPER_DIR="${1:-$HOME/.config/wallpapers}"
+WALLPAPER_DIR="${1:-$HOME/.config/aonix-walls}"
 ROFI_THEME="$HOME/.config/rofi/wall_changer/config.rasi"
-CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache/.wallpapers}/thumbnails"
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache/.aonix-walls}/thumbnails"
 THUMB_SIZE="400x400"
 
 mkdir -p "$CACHE_DIR"

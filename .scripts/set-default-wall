@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+hyprctl hyprpaper wallpaper ",~/.config/wallpapers/FutureCity.jpg" 2>/dev/null

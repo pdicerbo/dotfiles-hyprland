@@ -10,7 +10,7 @@ alias grep='grep --color=auto'
 alias pacman='pacman --color=auto'
 alias diff='diff --color=auto'
 alias ncdu='ncdu --color dark'
-# alias e='emacs -nw'
+alias icat="kitten icat"
 alias p='python'
 alias sshfs_atsapp234='sshfs atsapp234:/srv/projects/ /home/pierluigi/DockerEnvs/sshfs/monitor_stack_atsapp234'
 alias sshfs_atsapp235='sshfs atsapp235:/srv/projects/ /home/pierluigi/DockerEnvs/sshfs/srv_prj_atsapp235'
@@ -37,8 +37,6 @@ else
     PS1='\[\e[;36m\]┌──(\[\e[1;34m\]\u@\h\[\e[;36m\])-[\[\e[;35m\]\w\[\e[;36m\]]\n\[\e[;36m\]└─\[\e[1;37m\]>\[\e[0m\] '
 
 fi
-
-# setxkbmap -option compose:rwin
 
 export GOPATH=$HOME/.local/go
 fastfetch
