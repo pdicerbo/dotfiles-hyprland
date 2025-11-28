@@ -76,7 +76,7 @@ return {
             answer_header = "## Copilot ",
             error_header = "## Error ",
             prompts = prompts,
-            context = "buffers",
+            model = "claude-opus-4.5", -- default model
             resources = {
                 'buffer',
                 'selection'
@@ -139,8 +139,8 @@ return {
                     window = {
                         layout = "float",
                         relative = "cursor",
-                        width = 100,
-                        height = 30,
+                        width = 0.7,
+                        height = 0.4,
                         row = 1,
                     },
                 })
@@ -157,12 +157,6 @@ return {
                 callback = function()
                     vim.opt_local.relativenumber = true
                     vim.opt_local.number = true
-
-                    -- Get current filetype and set it to markdown if the current filetype is copilot-chat
-                    local ft = vim.bo.filetype
-                    if ft == "copilot-chat" then
-                        vim.bo.filetype = "markdown"
-                    end
                 end,
             })
         end,
@@ -178,6 +172,7 @@ return {
                         },
                     })
                 end,
+                mode = "n",
                 desc = "CopilotChat - Prompt actions",
             },
             {

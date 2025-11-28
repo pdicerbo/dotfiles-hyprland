@@ -53,9 +53,19 @@ return {
         "sindrets/diffview.nvim",
         cmd = { "DiffviewOpen", "DiffviewFileHistory" },
         keys = {
-            { "<leader>dv", "<cmd>DiffviewOpen<cr>", desc = "Open Diff View" },
+            {
+                "<leader>dv",
+                function()
+                    if next(require("diffview.lib").views) == nil then
+                        vim.cmd("DiffviewOpen")
+                    else
+                        vim.cmd("DiffviewClose")
+                    end
+                end,
+                desc = "Toggle DiffView Window",
+            },
             { "<leader>dh", "<cmd>DiffviewFileHistory %<cr>", desc = "Open Diff View file history" },
-            { "<leader>dc", "<cmd>DiffviewClose<cr>", desc = "Close Diff View" },
+            { "<leader>dc", "<cmd>DiffviewClose<cr>", desc = "Close DiffView" },
         },
         config = function()
             local actions = require("diffview.actions")
@@ -72,19 +82,19 @@ return {
         end,
     },
 
-    -- {
-    --     "harrisoncramer/gitlab.nvim",
-    --     dependencies = {
-    --         "MunifTanjim/nui.nvim",
-    --         "nvim-lua/plenary.nvim",
-    --         "sindrets/diffview.nvim",
-    --         "stevearc/dressing.nvim", -- Recommended but not required. Better UI for pickers.
-    --         "nvim-tree/nvim-web-devicons", -- Recommended but not required. Icons in discussion tree.
-    --     },
-    --     build = function () require("gitlab.server").build(true) end, -- Builds the Go binary
-    --     config = function()
-    --         require("gitlab").setup()
-    --     end,
-    -- },
+    {
+        "harrisoncramer/gitlab.nvim",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+            "sindrets/diffview.nvim",
+            "stevearc/dressing.nvim", -- Recommended but not required. Better UI for pickers.
+            "nvim-tree/nvim-web-devicons", -- Recommended but not required. Icons in discussion tree.
+        },
+        build = function () require("gitlab.server").build(true) end, -- Builds the Go binary
+        config = function()
+            require("gitlab").setup()
+        end,
+    },
 
 }

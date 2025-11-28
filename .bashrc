@@ -16,6 +16,10 @@ alias sshfs_atsapp234='sshfs atsapp234:/srv/projects/ /home/pierluigi/DockerEnvs
 alias sshfs_atsapp235='sshfs atsapp235:/srv/projects/ /home/pierluigi/DockerEnvs/sshfs/srv_prj_atsapp235'
 alias sshfs_atsuwk070='sshfs atsuwk070:/srv/projects/EXP.0_BP_DEV/BE/docker_bp_dev_apps/ /home/pierluigi/DockerEnvs/sshfs/dev_atsuwk070'
 alias dotfiles="/usr/bin/git --git-dir=$HOME/.dotfiles-bare-repo --work-tree=$HOME"
+alias ssh="kitty +kitten ssh"
+
+# avoid pasting weird characters
+bind 'set enable-bracketed-paste off'
 
 # sourcing git-completion.bash
 if [ -f /usr/share/git/completion/git-completion.bash ]; then
@@ -37,6 +41,8 @@ else
     PS1='\[\e[;36m\]┌──(\[\e[1;34m\]\u@\h\[\e[;36m\])-[\[\e[;35m\]\w\[\e[;36m\]]\n\[\e[;36m\]└─\[\e[1;37m\]>\[\e[0m\] '
 
 fi
+
+# setxkbmap -option compose:rwin
 
 export GOPATH=$HOME/.local/go
 fastfetch

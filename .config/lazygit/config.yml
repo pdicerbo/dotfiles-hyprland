@@ -7,20 +7,15 @@ git:
     - master
   autoFetch: false
   autoRefresh: false
-  branchLogCmd: git log --graph --color=always --abbrev-commit --decorate --pretty=medium {{branchName}} --oneline
+  branchLogCmd: git log --graph --color=always --abbrev-commit --decorate --author-date-order {{branchName}} --oneline
   log:
+    order: "author-date-order"
     showWholeGraph: true
   autoForwardBranches: none
   pagers:
     - colorArg: always
       pager: delta --dark --paging=never --side-by-side
 customCommands:
-  - key: 'a'
-    context: 'tags'
-    command: "git for-each-ref refs/tags/{{.SelectedTag.Name}} --format='%(contents)'"
-    output: popup
-    outputTitle: "Tag Annotation"
-    description: "Show Tag Annotation"
   - key: '<c-p>'
     description: "Pull from a specific remote repository"
     context: 'files'

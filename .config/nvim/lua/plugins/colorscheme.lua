@@ -28,7 +28,13 @@ return {
         "folke/tokyonight.nvim",
         lazy = false,
         priority = 1000,
-        opts = {},
+        opts = {
+            style = "storm",
+        },
+        config = function(_, opts)
+            require("tokyonight").setup(opts)
+            vim.cmd("colorscheme tokyonight")
+        end,
     },
 
     {
@@ -62,7 +68,7 @@ return {
                     cursorline = true
                 }
             })
-            vim.cmd("colorscheme onedark")
+            -- vim.cmd("colorscheme onedark")
         end
     },
 
