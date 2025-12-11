@@ -60,7 +60,9 @@ M.commands = {
 
     {
         name = "Undo tree",
-        action = "<leader>u",
+        action = function()
+            vim.cmd("UndotreeToggle")
+        end,
     },
 
     {
@@ -78,26 +80,6 @@ M.commands = {
     {
         name = "Open Cppman",
         action = "<leader>cpp",
-    },
-
-    {
-        name = "Find: Buffers",
-        action = "<leader>fb",
-    },
-
-    {
-        name = "Find: Diagnostics (Buffer)",
-        action = "<leader>fd",
-    },
-
-    {
-        name = "Find: Diagnostics (Workspace)",
-        action = "<leader>fD",
-    },
-
-    {
-        name = "Find: Files",
-        action = "<leader>ff",
     },
 
     {
@@ -151,11 +133,6 @@ M.commands = {
     },
 
     {
-        name = "Find: Undo",
-        action = "<leader>fu",
-    },
-
-    {
         name = "Git: Browse",
         action = function()
             Snacks.gitbrowse()
@@ -174,79 +151,81 @@ M.commands = {
 
     {
         name = "Gitlab choose Merge Request",
-        action = "glc",
+        action = function()
+            require("gitlab").choose_merge_request()
+        end,
     },
 
     {
         name = "Gitlab Start Review",
-        action = "glS",
+        action = function()
+            require("gitlab").review()
+        end,
     },
-
-    -- {
-    --   name = "LSP: Diagnostics (Location List)",
-    --   action = "<leader>lL",
-    -- },
-
-    -- {
-    --   name = "LSP: Lint",
-    --   action = "<leader>ll",
-    -- },
 
     {
         name = "LSP: Hover Documentation",
-        action = "K",
+        action = function()
+            -- Delay needed to ensure the picker is fully closed before showing the hover float
+            vim.defer_fn(function()
+                vim.lsp.buf.hover()
+            end, 10)
+        end,
     },
 
     {
         name = "LSP: Hover Diagnostics",
-        action = "J",
+        action = function()
+            -- Delay needed to ensure the picker is fully closed before showing the diagnostic float
+            vim.defer_fn(function()
+                vim.diagnostic.open_float()
+            end, 10)
+        end,
     },
 
     {
         name = "LSP: Hover Signature Documentation",
         action = function()
-            vim.lsp.buf.signature_help()
+            -- Delay needed to ensure the picker is fully closed before showing the signature float
+            vim.defer_fn(function()
+                vim.lsp.buf.signature_help()
+            end, 10)
         end,
     },
 
     {
         name = "LSP: Go to Declaration",
-        action = "gD",
+        action = function()
+            vim.lsp.buf.declaration()
+        end,
     },
 
     {
         name = "LSP: Go to Definitions",
-        action = "gd",
+        action = function()
+            vim.lsp.buf.definition()
+        end,
     },
 
     {
         name = "LSP: Go to References",
-        action = "gr",
+        action = function()
+            vim.lsp.buf.references()
+        end,
     },
 
     {
         name = "LSP: Go to Implementation",
-        action = "gI",
+        action = function()
+            vim.lsp.buf.implementation()
+        end,
     },
 
     {
         name = "LSP: Go to Type Definition",
-        action = "gy",
-    },
-
-    {
-        name = "Marks: Find",
-        action = "<leader>fm",
-    },
-
-    {
-        name = "Marks: New",
-        action = ":NewMark",
-    },
-
-    {
-        name = "Search: Buffers",
-        action = "<leader>f/",
+        action = function()
+            vim.lsp.buf.type_definition()
+        end,
     },
 
     {
@@ -254,35 +233,32 @@ M.commands = {
         action = ":echo g:colors_name",
     },
 
-    -- {
-    --   name = "Tab: New",
-    --   action = ":tabnew",
-    -- },
+    {
+        name = "LSP: Open Log File",
+        action = function()
+            vim.cmd.edit(vim.lsp.get_log_path())
+        end,
+    },
 
-    -- {
-    --   name = "Tab: New Split",
-    --   action = ":tab split",
-    -- },
+    {
+        name = "LSP: Show Attached Clients",
+        action = function()
+            local clients = vim.lsp.get_clients({ bufnr = 0 })
+            if #clients == 0 then
+                vim.notify("No LSP clients attached to this buffer", vim.log.levels.WARN)
+            else
+                local names = vim.tbl_map(function(c) return c.name end, clients)
+                vim.notify("Attached LSP clients: " .. table.concat(names, ", "), vim.log.levels.INFO)
+            end
+        end,
+    },
 
-    -- {
-    --   name = "Tab: Next",
-    --   action = ":tabnext",
-    -- },
-
-    -- {
-    --   name = "Tab: Previous",
-    --   action = ":tabprevious",
-    -- },
-
-    -- {
-    --   name = "Todo Comments: Quickfix List",
-    --   action = ":TodoQuickFix",
-    -- },
-
-    -- {
-    --   name = "Todo Comments: Location List",
-    --   action = ":TodoLocList",
-    -- },
+    {
+        name = "Buffer: Reload from Disk",
+        action = function()
+            vim.cmd("edit!")
+        end,
+    },
 
 }
 

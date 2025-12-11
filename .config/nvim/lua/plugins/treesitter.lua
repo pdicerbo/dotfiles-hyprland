@@ -64,7 +64,7 @@ return {
         end,
 
         keys = {
-            { "<leader>bs", "<cmd>TSContext toggle<cr>", desc = "toggle treesitter context" },
+            { "<leader>bs", "<cmd>TSContext toggle<cr>", desc = "toggle treesitter context (aka sticky scroll breadcrumbs)" },
         },
 
     },
