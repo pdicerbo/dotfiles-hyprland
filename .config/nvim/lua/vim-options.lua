@@ -1,7 +1,3 @@
-vim.cmd("set expandtab")
-vim.cmd("set tabstop=4")
-vim.cmd("set softtabstop=4")
-vim.cmd("set shiftwidth=4")
 vim.cmd("set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20")
 
 vim.g.mapleader = " "
@@ -46,10 +42,9 @@ vim.keymap.set( "i", "<S-Down>",    "<Esc>v<Down>",     { desc = "shift+Down arr
 vim.keymap.set( "i", "<S-Left>",    "<Esc>v<Left>",     { desc = "shift+Left arrow selection (insert mode)" })
 vim.keymap.set( "i", "<S-Right>",   "<Esc>v<Right>",    { desc = "shift+Right arrow selection (insert mode)" })
 
--- delete previous word in insert mode
 -- delete previous word in insert mode and normal mode
-vim.keymap.set("i", "<C-h>", "<C-w>", { desc = "Delete previous word in insert mode" })
-vim.keymap.set("n", "<C-h>", "db", { desc = "Delete previous word in normal mode" })
+vim.keymap.set("i", "<C-BS>", "<C-w>", { desc = "Delete previous word in insert mode" })
+vim.keymap.set("n", "<C-BS>", "db", { desc = "Delete previous word in normal mode" })
 
 -- delete next word in insert mode and normal mode
 vim.keymap.set("i", "<C-Del>", "<C-o>dw", { desc = "Delete next word in insert mode" })
@@ -65,11 +60,11 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 -- move selected lines left and right without losing selection
-vim.keymap.set("v", "<", "<gv", opts)
-vim.keymap.set("v", ">", ">gv", opts)
+vim.keymap.set("v", "<", "<gv", { desc = "Indent left and keep selection" })
+vim.keymap.set("v", ">", ">gv", { desc = "Indent right and keep selection" })
 
 -- prevent x delete from registering when next paste
-vim.keymap.set("n", "x", '"_x', opts)
+vim.keymap.set("n", "x", '"_x', { desc = "Delete char without yanking" })
 
 -- format without prettier using the built in
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
@@ -90,7 +85,7 @@ vim.keymap.set("n", "<leader>wl", "<cmd>set wrap!<CR>", { desc = "Toggle line wr
 -- reopen latest buffer (historically used)
 vim.keymap.set("n", "<leader>bb", "<cmd>b#<CR>", { desc = "Reopen latest buffer" })
 
-vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
     pattern = {"*.trc", "*.log"},

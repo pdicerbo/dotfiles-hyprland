@@ -275,5 +275,61 @@ return {
         },
         { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
         { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
+        { "<leader>yu", function()
+            vim.fn.setreg("+", "#" .. vim.uri_from_fname(vim.fn.expand("%:p")))
+            Snacks.notify.info("Copied URI: #" .. vim.uri_from_fname(vim.fn.expand("%:p")))
+        end, desc = "Copy buffer URI to clipboard (e.g. for CopilotChat)" },
+        { "<leader>yb", function()
+            local buffers = {}
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.bo[buf].buflisted then
+                    local name = vim.api.nvim_buf_get_name(buf)
+                    if name ~= "" then
+                        table.insert(buffers, { buf = buf, name = name })
+                    end
+                end
+            end
+            if #buffers == 0 then
+                Snacks.notify.warn("No buffers with files")
+                return
+            end
+            Snacks.picker({
+                title = "Select buffers to copy URIs (Tab to select, Enter to confirm)",
+                items = vim.tbl_map(function(b)
+                    return {
+                        text = vim.fn.fnamemodify(b.name, ":."),
+                        file = b.name,
+                        buf = b.buf,
+                    }
+                end, buffers),
+                confirm = function(picker)
+                    local sel = picker:selected()
+                    local uris = {}
+                    if #sel > 0 then
+                        for _, item in ipairs(sel) do
+                            table.insert(uris, "#" .. vim.uri_from_fname(item.file))
+                        end
+                    else
+                        local current = picker:current()
+                        if current then
+                            table.insert(uris, "#" .. vim.uri_from_fname(current.file))
+                        end
+                    end
+                    picker:close()
+                    if #uris > 0 then
+                        local result = table.concat(uris, "\n")
+                        vim.fn.setreg("+", result)
+                        Snacks.notify.info("Copied " .. #uris .. " URI(s):\n" .. result)
+                    end
+                end,
+                win = {
+                    input = {
+                        keys = {
+                            ["<Tab>"] = { "select_and_next", mode = { "n", "i" } },
+                        },
+                    },
+                },
+            })
+        end, desc = "Copy multiple buffer URIs to clipboard (for CopilotChat)" },
     },
 }
