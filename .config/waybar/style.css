@@ -7,13 +7,13 @@
  *                 |___/                              |___/
  *
  * -----------------------------------------------------
-*/
+ */
 
 /* -----------------------------------------------------
  * General
  * ----------------------------------------------------- */
 
- * {
+* {
     font-family: "Fira Sans Semibold", "Font Awesome 7 Free", "Font Awesome 7 Brands", "Font Awesome 6 Free", "Font Awesome 6 Brands", FontAwesome, "Material Icons", Roboto, Helvetica, Arial, sans-serif;
     border: none;
     border-radius: 0px;
@@ -278,7 +278,7 @@ window#waybar.empty #window {
  * Custom Now Playing
  * ----------------------------------------------------- */
 
- #custom-nowplaying {
+#custom-nowplaying {
     background-color: @background;
     font-size: 11px;
     color: @on_surface;
@@ -289,12 +289,12 @@ window#waybar.empty #window {
     border: 1px solid @border_color;
 }
 
- #custom-nowplaying.playing {
+#custom-nowplaying.playing {
     background-color: @primary_container;
     color: @on_primary_container;
 }
 
- #custom-nowplaying.paused {
+#custom-nowplaying.paused {
     background-color: @background;
 }
 
@@ -302,8 +302,8 @@ window#waybar.empty #window {
  * Custom Notification
  * ----------------------------------------------------- */
 
- #custom-notification {
-    margin: 0px 11px 0px 0px;
+#custom-notification {
+    margin: 0px 15px 0px 15px;
     padding: 0px;
     font-size: 24px;
     font-family: "Material Icons";
