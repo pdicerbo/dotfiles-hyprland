@@ -22,9 +22,9 @@ return {
         "MeanderingProgrammer/render-markdown.nvim",
         -- optional = true,
         opts = {
-            file_types = { "markdown", "copilot-chat" },
+            file_types = { "markdown", "copilot-chat", "codecompanion" },
         },
-        ft = { "markdown", "copilot-chat" },
+        ft = { "markdown", "copilot-chat", "codecompanion" },
     },
 
     {
@@ -235,5 +235,78 @@ return {
             { "<leader>cA", "<cmd>CopilotChatAgents<cr>", desc = "CopilotChat - Select Agents" },
         },
     },
+
+    {
+        "olimorris/codecompanion.nvim",
+        -- version = "^18.0.0",
+        event = "VeryLazy",
+        opts = {
+            display = {
+                action_palette = {
+                    provider = "snacks"
+                },
+                chat = {
+                    window = {
+                        position = "right", -- left, right, top, bottom, float
+                        width = 0.3,
+                    },
+                    auto_scroll = false,
+                    show_settings = true,
+                }
+            },
+            interactions = {
+                chat = {
+                    slash_commands = {
+                        ["file"] = {
+                            description = "Select a file using Snacks",
+                            keymaps = {
+                                modes = {
+                                    i = "<C-x>",
+                                    n = "<C-x>",
+                                },
+                            },
+                            opts = {
+                                provider = "snacks", -- options 'default', 'mini_pick', 'fzf_lua', snacks
+                                contains_code = true,
+                            },
+                        },
+                        ["buffer"] = {
+                            description = "Select a buffer using Snacks",
+                            keymaps = {
+                                modes = {
+                                    i = "<C-x>",
+                                    n = "<C-x>",
+                                },
+                            },
+                            opts = {
+                                provider = "snacks", -- options 'default', 'mini_pick', 'fzf_lua', snacks
+                                contains_code = true,
+                            },
+                        },
+                    },
+                    -- keymaps = {
+                    --     completion = {
+                    --         modes = {
+                    --             i = "<C-x>",
+                    --             n = { "<C-x>" },
+                    --         },
+                    --     }
+                    -- }
+                }
+            }
+        },
+
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "hrsh7th/nvim-cmp",
+        },
+
+        keys = {
+            { "<leader>ac","<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true }, desc = "Code Companion - Action Palette", },
+            { "<leader>aa", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, { noremap = true, silent = true }, desc = "Code Companion - Toggle Chat Window"},
+
+        },
+    }
 
 }
