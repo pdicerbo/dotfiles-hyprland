@@ -33,6 +33,7 @@ shared
 .bash_history*
 .bash_logout
 .cache
+.cargo
 .config/aonix-walls
 .config/baloofileinformationrc
 .config/btop
