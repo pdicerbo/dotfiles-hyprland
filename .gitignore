@@ -4,6 +4,7 @@ ARCH
 BIT
 Builders
 CONAN2_WORKSPACE
+Certificates
 DockerEnvs
 Downloads
 EXP0
@@ -42,9 +43,11 @@ shared
 .config/cppman
 .config/dconf
 .config/dolphinrc
+.config/filetypesrc
 .config/gcloud
 .config/github-copilot
 .config/google-chrome
+.config/htop
 .config/ksnip
 .config/menus
 .config/mimeapps.list*
@@ -55,6 +58,9 @@ shared
 .config/xfce4
 .config/go/
 .config/kde.org
+.config/kdeglobals
+.config/kiorc
+.config/ktrashrc
 .config/ristretto/
 .config/session/
 .config/Thunar
