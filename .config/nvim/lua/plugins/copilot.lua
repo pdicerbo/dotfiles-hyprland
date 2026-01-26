@@ -76,7 +76,7 @@ return {
             answer_header = "## Copilot ",
             error_header = "## Error ",
             prompts = prompts,
-            model = "claude-opus-4.5", -- default model
+            model = "gpt-4.1", -- default model
             resources = {
                 'buffer',
                 'selection'

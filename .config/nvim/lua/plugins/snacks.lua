@@ -16,6 +16,7 @@ return {
         bigfile = { enabled = true },
         indent = { enabled = true },
         explorer = { enabled = true },
+        image = { enabled = true },
         input = {
             enabled = true,
             icon = " ",

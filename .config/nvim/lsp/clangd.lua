@@ -57,6 +57,10 @@ local function symbol_info()
     end, bufnr)
 end
 
+local cmp_nvim_lsp = require('cmp_nvim_lsp')
+local cmp_capabilities = cmp_nvim_lsp.default_capabilities()
+cmp_capabilities.offsetEncoding = { 'utf-8', 'utf-16' }
+
 return {
     cmd = { 'clangd' },
     filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
@@ -69,14 +73,7 @@ return {
         'configure.ac', -- AutoTools
         '.git',
     },
-    capabilities = {
-        textDocument = {
-            completion = {
-                editsNearCursor = true,
-            },
-        },
-        offsetEncoding = { 'utf-8', 'utf-16' },
-    },
+    capabilities = cmp_capabilities,
     on_attach = function(client, bufnr)
         vim.api.nvim_buf_create_user_command(0, 'LspClangdSwitchSourceHeader', function()
             switch_source_header(0)

@@ -236,6 +236,11 @@ return {
                         require("floaterm.api").new_term "Terminal"
                     end, { buffer = buf })
                 end,
+                sidebar = function(buf)
+                    vim.keymap.set("n", "<ESC>", function()
+                        require("floaterm").toggle()
+                    end, { buffer = buf })
+                end,
             },
         },
         cmd = "FloatermToggle",
