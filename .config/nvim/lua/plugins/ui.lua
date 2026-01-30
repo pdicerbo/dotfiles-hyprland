@@ -200,20 +200,6 @@ return {
     },
 
     {
-        "nvim-neo-tree/neo-tree.nvim",
-        branch = "v3.x",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons",
-            "MunifTanjim/nui.nvim",
-        },
-        config = function()
-            vim.keymap.set("n", "<C-E>", ":Neotree filesystem reveal left<CR>", {})
-            vim.keymap.set("n", "<leader>bf", ":Neotree buffers reveal float<CR>", {})
-        end,
-    },
-
-    {
         "sphamba/smear-cursor.nvim",
         opts = {
             cursor_color = "#00ffde",
@@ -226,26 +212,11 @@ return {
     },
 
     {
-        "nvzone/floaterm",
-        dependencies = "nvzone/volt",
-        opts = {
-            border = true,
-            mappings = {
-                term = function(buf)
-                    vim.keymap.set({ "n", "t" }, "<C-t>", function()
-                        require("floaterm.api").new_term "Terminal"
-                    end, { buffer = buf })
-                end,
-                sidebar = function(buf)
-                    vim.keymap.set("n", "<ESC>", function()
-                        require("floaterm").toggle()
-                    end, { buffer = buf })
-                end,
-            },
-        },
-        cmd = "FloatermToggle",
+        'wsdjeg/calendar.nvim',
+        event = "VeryLazy",
         keys = {
-            { "<leader>tf", "<cmd>FloatermToggle<cr>", desc = "Toggle Floaterm terminal" },
+            { "<leader>cal", "<Cmd>Calendar<CR>", desc = "Open Calendar" },
         },
     },
+
 }

@@ -1,4 +1,5 @@
 return {
+    -- collection of interactive TUIs for Neovim
     'jrop/tuis.nvim',
     config = function()
         -- Optional: set up keymaps

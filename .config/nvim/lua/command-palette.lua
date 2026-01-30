@@ -145,11 +145,6 @@ M.commands = {
     },
 
     {
-        name = "Floaterm: Toggle",
-        action = "<leader>tt",
-    },
-
-    {
         name = "Gitlab choose Merge Request",
         action = function()
             require("gitlab").choose_merge_request()
@@ -257,6 +252,13 @@ M.commands = {
         name = "Buffer: Reload from Disk",
         action = function()
             vim.cmd("edit!")
+        end,
+    },
+
+    {
+        name = "Attempt: New Snippet Buffer",
+        action = function()
+            require("attempt").new_select()
         end,
     },
 

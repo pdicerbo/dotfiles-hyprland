@@ -16,10 +16,6 @@ return {
     },
 
     {
-        "tpope/vim-surround"
-    },
-
-    {
         "cappyzawa/trim.nvim",
         config = function()
             require("trim").setup({
@@ -33,7 +29,7 @@ return {
                 highlight_ctermbg = 'red',
                 notifications = true,
             })
-            vim.keymap.set("n", "<C-k><C-x>", ":Trim<CR>", { desc = "Trim whitespace" })
+            vim.keymap.set("n", "<C-k><C-x>", ":TrimToggle<CR>", { desc = "Toggle Trim on save" })
         end,
     },
 

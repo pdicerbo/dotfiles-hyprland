@@ -1,4 +1,5 @@
 return {
+    -- enhance Neovim's native comments
     "folke/ts-comments.nvim",
     opts = {},
     event = "VeryLazy",

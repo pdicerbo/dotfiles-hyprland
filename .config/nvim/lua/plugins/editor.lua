@@ -1,71 +1,7 @@
 return {
 
     {
-        'echasnovski/mini.ai', version = '*',
-        config = function()
-            require('mini.ai').setup()
-        end
-
-    },
-
-    {
-        'echasnovski/mini.move', version = '*',
-        config = function()
-            require('mini.move').setup()
-        end
-
-    },
-
-    {
-
-        "echasnovski/mini.pairs",
-        event = "VeryLazy",
-        opts = {
-            modes = { insert = true, command = true, terminal = false },
-            -- skip autopair when next character is one of these
-            skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
-            -- skip autopair when the cursor is inside these treesitter nodes
-            skip_ts = { "string" },
-            -- skip autopair when next character is closing pair
-            -- and there are more closing pairs than opening pairs
-            skip_unbalanced = true,
-            -- better deal with markdown code blocks
-            markdown = true,
-        },
-        config = function(_, opts)
-            require('mini.pairs').setup(opts)
-        end,
-    },
-
-    {
-        'echasnovski/mini.surround', version = '*',
-        config = function()
-            require('mini.surround').setup()
-        end
-    },
-
-    -- Split & join
-    {
-        "echasnovski/mini.splitjoin",
-        config = function()
-            local miniSplitJoin = require("mini.splitjoin")
-            miniSplitJoin.setup({
-                mappings = { toggle = "" }, -- Disable default mapping
-            })
-            vim.keymap.set({ "n", "x" }, "mj", function() miniSplitJoin.join() end, { desc = "Join arguments" })
-            vim.keymap.set({ "n", "x" }, "mk", function() miniSplitJoin.split() end, { desc = "Split arguments" })
-        end,
-    },
-
-    {
-        -- automatic highlighting of word under cursor
-        "echasnovski/mini.cursorword",
-        config = function()
-            require("mini.cursorword").setup()
-        end,
-    },
-
-    {
+        -- Code minimap
         "gorbit99/codewindow.nvim",
         config = function()
             local codewindow = require('codewindow')
@@ -75,7 +11,8 @@ return {
     },
 
     {
-        -- Setup Folding with nvim-ufo
+        -- Setup Folding with nvim-ufo:
+        -- make Neovim's fold look modern and keep high performance.
         "kevinhwang91/nvim-ufo",
         dependencies = {
             "kevinhwang91/promise-async",
@@ -112,6 +49,7 @@ return {
     },
 
     {
+        -- discovering motions (Both vertical and horizontal) to navigate your current buffer
         "tris203/precognition.nvim",
         event = "VeryLazy",
         opts = {
@@ -119,5 +57,10 @@ return {
             showBlankVirtLine = false
         },
         vim.keymap.set("n", "<leader>hh", function() require("precognition").toggle() end, { desc = "Toggle Precognition" }),
-    }
+    },
+
+    {
+        -- automatically toggle between relative and absolute line numbers
+        "sitiom/nvim-numbertoggle"
+    },
 }
