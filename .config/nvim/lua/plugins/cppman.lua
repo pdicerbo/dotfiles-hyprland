@@ -6,19 +6,13 @@ return {
         "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
         "MunifTanjim/nui.nvim",
     },
+
+	keys = {
+		{ "<leader>cw", function() require("cppman").open_cppman_for(vim.fn.expand("<cword>")) end, desc = "open cppman for selected word" },
+		{ "<leader>cpp", function() require("cppman").input() end, desc = "open cppman" },
+	},
+
 	config = function()
-		local cppman = require("cppman")
-		cppman.setup()
-
-		-- Make a keymap to open the word under cursor in CPPman
-		vim.keymap.set("n", "<leader>cw", function()
-			cppman.open_cppman_for(vim.fn.expand("<cword>"))
-		end, { desc = "open cppman for selected word" } )
-
-		-- Open search box
-		vim.keymap.set("n", "<leader>cpp", function()
-			cppman.input()
-		end, { desc = "open cppman" })
-
+		require("cppman").setup()
 	end
 }

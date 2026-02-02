@@ -1,12 +1,13 @@
 return {
     {
         "rebelot/kanagawa.nvim",
+        lazy = true,
     },
 
     {
         "catppuccin/nvim",
         name = "catppuccin",
-        priority = 1000,
+        lazy = true,
         config = function()
             require("catppuccin").setup({
                 integrations = {
@@ -26,8 +27,8 @@ return {
 
     {
         "folke/tokyonight.nvim",
-        lazy = false,
-        priority = 1000,
+        lazy = false,  -- Load at startup
+        priority = 1000,  -- High priority
         opts = {
             style = "storm",
         },
@@ -39,26 +40,22 @@ return {
 
     {
         "shaunsingh/nord.nvim",
-        lazy = false,
-        priority = 1000,
+        lazy = true,
     },
 
     {
         "Mofiqul/dracula.nvim",
-        lazy = false,
-        priority = 1000,
+        lazy = true,
     },
 
     {
         "marko-cerovac/material.nvim",
-        lazy = false,
-        priority = 1000,
+        lazy = true,
     },
 
     {
         "olimorris/onedarkpro.nvim",
-        lazy = false,
-        priority = 1000,
+        lazy = true,
         config = function()
             require("onedarkpro").setup({
                 colors = {
@@ -68,17 +65,12 @@ return {
                     cursorline = true
                 }
             })
-            -- vim.cmd("colorscheme onedark")
         end
     },
 
     {
         "adibhanna/forest-night.nvim",
-        lazy = false,
-        priority = 1000,
-        -- config = function()
-        --     vim.cmd("colorscheme forest-night")
-        -- end
+        lazy = true,
     },
 
     {
