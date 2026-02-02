@@ -1,3 +1,61 @@
+-- Opens a branch picker and diffs current state against selected branch
+local function diffview_branch()
+    Snacks.picker.git_branches({
+        confirm = function(picker)
+            local item = picker:current()
+            picker:close()
+            if item then
+                local branch = item.branch or item.name or item.text
+                vim.cmd("DiffviewOpen " .. branch)
+            end
+        end,
+    })
+end
+
+-- Opens a commit picker and diffs current state against selected commit
+local function diffview_commit()
+    Snacks.picker.git_log({
+        confirm = function(picker)
+            local item = picker:current()
+            picker:close()
+            if item and item.commit then
+                vim.cmd("DiffviewOpen " .. item.commit)
+            end
+        end,
+    })
+end
+-- Opens a commit picker for selecting 2 commits (via Tab) to diff a range
+local function diffview_range()
+    Snacks.picker.git_log({
+        title = "Select 2 commits for range diff (Tab to select)",
+        confirm = function(picker)
+            local sel = picker:selected()
+            picker:close()
+            if #sel >= 2 then
+                vim.cmd("DiffviewOpen " .. sel[2].commit .. ".." .. sel[1].commit)
+            else
+                Snacks.notify.warn("Select 2 commits with Tab")
+            end
+        end,
+        win = {
+            input = {
+                keys = {
+                    ["<Tab>"] = { "select_and_next", mode = { "n", "i" } },
+                },
+            },
+        },
+    })
+end
+
+-- Opens an input prompt to enter a commit hash and diff against it
+local function diffview_input()
+    vim.ui.input({ prompt = "Enter commit hash: " }, function(commit_hash)
+        if commit_hash and commit_hash ~= "" then
+            vim.cmd("DiffviewOpen " .. commit_hash)
+        end
+    end)
+end
+
 return {
 
     {
@@ -62,10 +120,36 @@ return {
                         vim.cmd("DiffviewClose")
                     end
                 end,
-                desc = "Toggle DiffView Window",
+                desc = "Toggle Diffview",
             },
-            { "<leader>dh", "<cmd>DiffviewFileHistory %<cr>", desc = "Open Diff View file history" },
+            { "<leader>dH", "<cmd>DiffviewFileHistory %<cr>", desc = "Open Diff View file history" },
             { "<leader>dc", "<cmd>DiffviewClose<cr>", desc = "Close DiffView" },
+            { "<leader>db", diffview_branch, desc = "Diffview against branch" },
+            { "<leader>dC", diffview_commit, desc = "Diffview against commit" },
+            { "<leader>dh", diffview_input, desc = "Diffview against commit hash" },
+            { "<leader>dr", diffview_range, desc = "Diffview commit range" },
+            {
+                "<leader>dm",
+                function()
+                    vim.ui.select(
+                        { "Branch", "Commit", "Range (2 commits)", "Enter commit hash" },
+                        { prompt = "Diffview against:" },
+                        function(choice)
+                            if not choice then return end
+                            if choice == "Branch" then
+                                diffview_branch()
+                            elseif choice == "Commit" then
+                                diffview_commit()
+                            elseif choice == "Range (2 commits)" then
+                                diffview_range()
+                            elseif choice == "Enter commit hash" then
+                                diffview_input()
+                            end
+                        end
+                    )
+                end,
+                desc = "Diffview menu",
+            },
         },
         config = function()
             local actions = require("diffview.actions")
