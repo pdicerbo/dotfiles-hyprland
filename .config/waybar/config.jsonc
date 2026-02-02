@@ -127,8 +127,8 @@
         "tooltip-format": "{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}",
         "tooltip-format-enumerate-connected-battery": "{device_alias}\t {device_battery_percentage}%",
-        "on-click": "~/.scripts/toggle_bluetooth &",
-        "on-click-right": "hyprctl dispatch exec blueman-manager"
+        "on-click-right": "~/.scripts/toggle_bluetooth &",
+        "on-click": "hyprctl dispatch exec blueman-manager"
     },
 
 
