@@ -16,9 +16,9 @@ git:
     - colorArg: always
       pager: delta --dark --paging=never --side-by-side
 customCommands:
-  - key: '<c-p>'
+  - key: '<f1>'
     description: "Pull from a specific remote repository"
-    context: 'files'
+    context: 'global'
     loadingText: 'Pulling ...'
     command: git pull {{ .Form.Remote }} {{ .Form.RemoteBranch }}
     prompts:
@@ -32,3 +32,37 @@ customCommands:
         title: "Remote branch:"
         suggestions:
           command: "git branch --remote --list '{{.Form.Remote}}/*' --format='%(refname:short)' | sed 's/{{.Form.Remote}}\\///'"
+  - key: '<c-p>'
+    description: "Push to a specific remote repository"
+    context: 'global'
+    loadingText: 'Pushing ...'
+    prompts:
+      - type: 'menuFromCommand'
+        title: 'Which remote repository to push to?'
+        command: bash -c "git remote --verbose | grep '/.* (push)'"
+        filter: '(?P<remote>.*)\s+(?P<url>.*) \(push\)'
+        valueFormat: '{{ .remote }}'
+        labelFormat: '{{ .remote | bold | cyan }} {{ .url }}'
+      - type: 'menu'
+        title: 'How to push?'
+        options:
+          - value: 'push'
+          - value: 'push --force-with-lease'
+          - value: 'push --force'
+    command: "git {{index .PromptResponses 1}} {{index .PromptResponses 0}}"
+  - key: '<c-d>'
+    description: 'fetch a remote branch'
+    command: git fetch {{ .Form.Remote }} {{ .Form.RemoteBranch }}
+    context: 'global'
+    prompts:
+      - type: 'input'
+        key: 'Remote'
+        title: "Fetch from Remote:"
+        suggestions:
+          preset: 'remotes'
+      - type: 'input'
+        key: 'RemoteBranch'
+        title: "Fetch Remote branch:"
+        suggestions:
+          command: "git branch --remote --list '{{.Form.Remote}}/*' --format='%(refname:short)' | sed 's/{{.Form.Remote}}\\///'"
+    loadingText: 'Fetching branch...'
