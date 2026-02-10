@@ -42,6 +42,7 @@ return {
         keys = {
             { "<leader>fj", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
             { "<leader>fT", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+            { "<c-space>",  mode = { "n", "x", "o" }, function() require("flash").treesitter( { actions = { ["<c-space>"] = "next", ["<c-BS>"] = "prev" } }) end, desc = "Treesitter Incremental selection" },
             { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
             { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
             { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
