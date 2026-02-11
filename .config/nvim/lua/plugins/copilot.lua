@@ -184,11 +184,15 @@ return {
                 desc = "CopilotChat - Prompt actions",
             },
             -- Code related commands
-            { "<leader>ce", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
+            -- { "<leader>ce", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
             -- { "<leader>at", "<cmd>CopilotChatTests<cr>", desc = "CopilotChat - Generate tests" },
-            { "<leader>cr", "<cmd>CopilotChatReview<cr>", desc = "CopilotChat - Review code" },
+            -- { "<leader>cr", "<cmd>CopilotChatReview<cr>", desc = "CopilotChat - Review code" },
             -- { "<leader>aR", "<cmd>CopilotChatRefactor<cr>", desc = "CopilotChat - Refactor code" },
-            { "<leader>cn", "<cmd>CopilotChatBetterNamings<cr>", desc = "CopilotChat - Better Naming" },
+            -- { "<leader>cn", "<cmd>CopilotChatBetterNamings<cr>", desc = "CopilotChat - Better Naming" },
+            -- { "<leader>cm", "<cmd>CopilotChatCommit<cr>", desc = "CopilotChat - Generate commit message for all changes", },
+            -- { "<leader>cA", "<cmd>CopilotChatAgents<cr>", desc = "CopilotChat - Select Agents" },
+
+            -- Inline chat with Copilot
             {
                 "<leader>ci",
                 ":CopilotChatInline ",
@@ -206,12 +210,6 @@ return {
                 end,
                 desc = "CopilotChat - Ask input",
             },
-            -- Generate commit message based on the git diff
-            {
-                "<leader>cm",
-                "<cmd>CopilotChatCommit<cr>",
-                desc = "CopilotChat - Generate commit message for all changes",
-            },
             -- Quick chat with Copilot
             {
                 "<leader>cq",
@@ -227,12 +225,82 @@ return {
             { "<leader>cf", "<cmd>CopilotChatFixError<cr>", desc = "CopilotChat - Fix Diagnostic" },
             -- Clear buffer and chat history
             { "<leader>cl", "<cmd>CopilotChatReset<cr>", desc = "CopilotChat - Clear buffer and chat history" },
+            -- Save chat
+            {
+                "<leader>cS",
+                function()
+                    local input = vim.fn.input("Save chat as: ")
+                    if input ~= "" then
+                        require("CopilotChat").save(input)
+                    end
+                end,
+                desc = "CopilotChat - Save chat",
+            },
+            -- Load chat
+            {
+                "<leader>cL",
+                function()
+                    local history_path = vim.fn.stdpath("data") .. "/copilotchat_history"
+                    local files = vim.fn.glob(history_path .. "/*.json", false, true)
+
+                    if #files == 0 then
+                        vim.notify("No saved chats found", vim.log.levels.WARN)
+                        return
+                    end
+
+                    local chat_names = {}
+                    for _, file in ipairs(files) do
+                        local name = vim.fn.fnamemodify(file, ":t:r")
+                        table.insert(chat_names, name)
+                    end
+
+                    vim.ui.select(chat_names, {
+                        prompt = "Select a chat to load:",
+                    }, function(choice)
+                        if choice then
+                            require("CopilotChat").load(choice)
+                        end
+                    end)
+                end,
+                desc = "CopilotChat - Load chat",
+            },
+            -- Delete chat
+            {
+                "<leader>cD",
+                function()
+                    local history_path = vim.fn.stdpath("data") .. "/copilotchat_history"
+                    local files = vim.fn.glob(history_path .. "/*.json", false, true)
+
+                    if #files == 0 then
+                        vim.notify("No saved chats found", vim.log.levels.WARN)
+                        return
+                    end
+
+                    local chat_names = {}
+                    for _, file in ipairs(files) do
+                        local name = vim.fn.fnamemodify(file, ":t:r")
+                        table.insert(chat_names, name)
+                    end
+
+                    vim.ui.select(chat_names, {
+                        prompt = "Select a chat to delete:",
+                    }, function(choice)
+                        if choice then
+                            local file_path = history_path .. "/" .. choice .. ".json"
+                            if vim.fn.delete(file_path) == 0 then
+                                vim.notify("Deleted chat: " .. choice, vim.log.levels.INFO)
+                            else
+                                vim.notify("Failed to delete chat: " .. choice, vim.log.levels.ERROR)
+                            end
+                        end
+                    end)
+                end,
+                desc = "CopilotChat - Delete chat",
+            },
             -- Toggle Copilot Chat Vsplit
             { "<leader>cc", "<cmd>CopilotChatToggle<cr>", desc = "CopilotChat - Toggle" },
             -- Copilot Chat Models
             { "<leader>c?", "<cmd>CopilotChatModels<cr>", desc = "CopilotChat - Select Models" },
-            -- Copilot Chat Agents
-            { "<leader>cA", "<cmd>CopilotChatAgents<cr>", desc = "CopilotChat - Select Agents" },
         },
     },
 
