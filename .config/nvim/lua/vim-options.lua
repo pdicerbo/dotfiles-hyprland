@@ -94,7 +94,7 @@ vim.keymap.set({ "n", "v" }, "<leader>dd", ":t.<CR>", { desc = "Duplicate line o
 vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-    pattern = {"*.trc", "*.log"},
+    pattern = {"*.trc", "*.log", "*.evt"},
     callback = function()
         vim.bo.filetype = "systemverilog"
     end,

@@ -14,7 +14,7 @@ return {
                 "-DCMAKE_INSTALL_PREFIX=../install"
             },
             cmake_build_options = {
-                "--parallel"
+                "--parallel 14"
             },
             cmake_executor = {
                 name = "quickfix", -- name of the executor
