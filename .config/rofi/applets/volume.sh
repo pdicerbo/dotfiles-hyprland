@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-theme="$HOME/.config/rofi/apps/style.rasi"
+theme="$HOME/.config/rofi/applets/style.rasi"
 
 list_col='1'
 list_row='5'

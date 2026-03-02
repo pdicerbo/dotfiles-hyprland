@@ -6,7 +6,7 @@
 ## Applets : Favorite Applications
 
 # Import Current Theme
-theme="$HOME/.config/rofi/apps/style.rasi"
+theme="$HOME/.config/rofi/applets/style.rasi"
 
 # Theme Elements
 prompt='Applications'

@@ -2,7 +2,7 @@
 
 WALLPAPER_DIR="${1:-$HOME/.config/aonix-walls}"
 # ROFI_THEME="$HOME/.config/rofi/wall_changer/config.rasi"
-ROFI_THEME="$HOME/.config/rofi/launch/style.rasi"
+ROFI_THEME="$HOME/.config/rofi/launcher/style.rasi"
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache/.aonix-walls}/thumbnails"
 THUMB_SIZE="400x400"
 
