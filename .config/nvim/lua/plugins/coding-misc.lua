@@ -29,7 +29,7 @@ return {
                 highlight_ctermbg = 'red',
                 notifications = true,
             })
-            vim.keymap.set("n", "<C-k><C-x>", ":TrimToggle<CR>", { desc = "Toggle Trim on save" })
+            vim.keymap.set("n", "<leader>tr", ":TrimToggle<CR>", { desc = "Toggle Trim on save" })
         end,
     },
 
