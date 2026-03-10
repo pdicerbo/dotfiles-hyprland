@@ -108,7 +108,7 @@ return {
     },
 
     {
-        "sindrets/diffview.nvim",
+        "dlyongemallo/diffview.nvim",
         cmd = { "DiffviewOpen", "DiffviewFileHistory" },
         keys = {
             {
@@ -171,7 +171,7 @@ return {
         dependencies = {
             "MunifTanjim/nui.nvim",
             "nvim-lua/plenary.nvim",
-            "sindrets/diffview.nvim",
+            "dlyongemallo/diffview.nvim",
             "stevearc/dressing.nvim", -- Recommended but not required. Better UI for pickers.
             "nvim-tree/nvim-web-devicons", -- Recommended but not required. Icons in discussion tree.
         },

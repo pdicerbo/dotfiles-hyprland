@@ -3,6 +3,8 @@ gui:
     'Pierluigi Di Cerbo': 'blue'
 git:
   autoStageResolvedConflicts: false
+  commit:
+    autoWrapCommitMessage: false
   mainBranches:
     - master
   autoFetch: false

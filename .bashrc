@@ -13,6 +13,8 @@ alias diff='diff --color=auto'
 alias ncdu='ncdu --color dark'
 alias icat="kitten icat"
 alias p='python'
+alias fp='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
+alias nfile='fd --type f | fzf --preview "bat --color=always --style=numbers --line-range=:500 {}" | xargs nvim'
 alias sshfs_atsapp234='sshfs atsapp234:/srv/projects/ /home/pierluigi/DockerEnvs/sshfs/monitor_stack_atsapp234'
 alias sshfs_atsapp235='sshfs atsapp235:/srv/projects/ /home/pierluigi/DockerEnvs/sshfs/srv_prj_atsapp235'
 alias sshfs_atsuwk070='sshfs atsuwk070:/srv/projects/EXP.0_BP_DEV/BE/docker_bp_dev_apps/ /home/pierluigi/DockerEnvs/sshfs/dev_atsuwk070'

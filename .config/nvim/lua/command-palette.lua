@@ -99,37 +99,42 @@ M.commands = {
 
     {
         name = "Cmake: Generate",
-        action = "<leader>cg",
+        action = ":CMakeGenerate",
     },
 
     {
         name = "Cmake: Reconfigure",
-        action = "<leader>cG",
+        action = ":CMakeGenerate!",
     },
 
     {
         name = "Cmake: Build",
-        action = "<leader>cb",
+        action = ":CMakeBuild",
     },
 
     {
         name = "Cmake: Rebuild",
-        action = "<leader>cB",
+        action = ":CMakeBuild!",
     },
 
     {
         name = "Cmake: Clean",
-        action = "<leader>cx",
+        action = ":CMakeClean",
     },
 
     {
         name = "Cmake: Install",
-        action = "<leader>cI",
+        action = ":CMakeInstall",
     },
 
     {
         name = "Cmake: Stop",
-        action = "<leader>cQ",
+        action = ":CMakeStopExecutor",
+    },
+
+    {
+        name = "Cmake: Settings",
+        action = ":CMakeSettings",
     },
 
     {

@@ -37,17 +37,10 @@ return {
         })
 
         vim.keymap.set("n", "<F7>",         ":CMakeBuild<CR>",           { desc = "CMake Build project" })
-        vim.keymap.set("n", "<leader>cb",   ":CMakeBuild<CR>",           { desc = "CMake Build project" })
-        vim.keymap.set("n", "<leader>cB",   ":CMakeBuild!<CR>",          { desc = "CMake Rebuild project" })
-        vim.keymap.set("n", "<leader>cg",   ":CMakeGenerate<CR>",        { desc = "CMake Generate project" })
-        vim.keymap.set("n", "<leader>cG",   ":CMakeGenerate!<CR>",       { desc = "CMake Reconfigure project" })
-        vim.keymap.set("n", "<leader>cI",   ":CMakeInstall<CR>",         { desc = "CMake Install project" })
         vim.keymap.set("n", "<F8>",         ":CMakeInstall<CR>",         { desc = "CMake Install project" })
         vim.keymap.set('n', '<leader>cs', function() require("lazy").reload({ plugins = { "cmake-tools.nvim" } }) vim.cmd("CMakeSelectCwd") end, { desc = "Reload cmake-tools and select CMake file" })
         vim.keymap.set("n", "<leader>ct",   ":CMakeRunTest<CR>",         { desc = "CMake Run Test" })
         vim.keymap.set("n", "<leader>cT",   ":CMakeSelectBuildType<CR>", { desc = "CMake Select Build Type" })
-        vim.keymap.set("n", "<leader>cS",   ":CMakeSettings<CR>",        { desc = "CMake Settings" })
-        vim.keymap.set("n", "<leader>cx",   ":CMakeClean<CR>",           { desc = "CMake Clean all targets" })
         vim.keymap.set("n", "<leader>cQ",   ":CMakeStopExecutor<CR>",    { desc = "CMake Stop execution" })
     end,
 }
