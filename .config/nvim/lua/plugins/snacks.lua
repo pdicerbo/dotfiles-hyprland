@@ -111,6 +111,9 @@ return {
                     layout = {
                         preset = 'sidebar',
                         preview = false, ---@diagnostic disable-line
+                        layout = {
+                            width = 0.2,
+                        },
                     },
                     actions = {
                         toggle_preview = function(picker)
@@ -321,7 +324,7 @@ return {
         { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
         { "<leader>nf", function() Snacks.scratch({ win = { width = 0, height = 0, }}) end, desc = "Toggle Scratch Buffer (full window)" },
         { "<leader>nb", function() Snacks.scratch({ win = { position = 'right' }}) end, desc = "Toggle Scratch Buffer on the right" },
-        { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
+        { "<leader>bS", function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
         { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
         { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
         { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },

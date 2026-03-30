@@ -73,8 +73,16 @@ return {
         lazy = true,
     },
 
+    -- {
+    --     "typicode/bg.nvim",
+    --     lazy = false
+    -- },
+
     {
-        "typicode/bg.nvim",
-        lazy = false
-    },
+        "xiyaowong/transparent.nvim",
+        lazy = false,
+        keys = {
+            { "<leader>bt", "<cmd>TransparentToggle<cr>", desc = "Toggle Transparent Background" },
+        },
+    }
 }
