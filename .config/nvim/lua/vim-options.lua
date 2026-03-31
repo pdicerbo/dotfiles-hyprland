@@ -23,12 +23,18 @@ vim.opt.termguicolors = true
 vim.opt.winborder = 'rounded'
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
--- Shift visual selected lines
-vim.keymap.set( "v", "<M-j>",       ":m '>+1<CR>gv=gv", { desc = "Shift visual selected lines down" } ) -- Shift visual selected lines down
-vim.keymap.set( "v", "<M-k>",       ":m '<-2<CR>gv=gv", { desc = "Shift visual selected lines up" } ) -- Shift visual selected lines up
-vim.keymap.set( "v", "<M-Down>",    ":m '>+1<CR>gv=gv", { desc = "Shift visual selected lines down" } ) -- Shift visual selected lines down
-vim.keymap.set( "v", "<M-Up>",      ":m '<-2<CR>gv=gv", { desc = "Shift visual selected lines up" } ) -- Shift visual selected lines up
-vim.keymap.set( "n", "<C-a>",       "gg<S-v>G", { desc = "Select all lines in buffer (overrides default <C-a> behavior, i.e. incrementing the number under cursor)" }) -- Select all lines in buffer
+-- resize vertical splits with Ctrl+Left and Ctrl+Right
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
+
+-- navigate splits with Ctrl+h/j/k/l
+vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
+
+-- Select all lines in buffer
+vim.keymap.set( "n", "<C-a>",       "gg<S-v>G", { desc = "Select all lines in buffer (overrides default <C-a> behavior, i.e. incrementing the number under cursor)" })
 
 -- shift+arrow selection
 vim.keymap.set( "n", "<S-Up>",      "v<Up>",            { desc = "shift+Up arrow selection (normal mode)" })

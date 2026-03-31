@@ -94,7 +94,7 @@ return {
                         }
                         rel:on('WinLeave', function()
                             vim.schedule(function()
-                                if not picker:is_focused() then
+                                if not picker:is_focused() and picker.preview and picker.preview.win then
                                     picker.preview.win:close()
                                 end
                             end)
@@ -106,7 +106,9 @@ return {
                         picker.main = preview_win.win
                     end,
                     on_close = function(picker)
-                        picker.preview.win:close()
+                        if picker.preview and picker.preview.win then
+                            picker.preview.win:close()
+                        end
                     end,
                     layout = {
                         preset = 'sidebar',
@@ -198,8 +200,7 @@ return {
                                 local sel = picker:selected()
                                 if #sel > 0 and sel then
                                     Snacks.notify.info(sel[1].file)
-                                    vim.cmd("tabnew " .. sel[1].file)
-                                    vim.cmd("vert diffs " .. sel[2].file)
+                                    require("diffview").diff_files( { sel[1].file, sel[2].file } )
                                     Snacks.notify.info("Diffing " .. sel[1].file .. " against " .. sel[2].file)
                                     return
                                 end
