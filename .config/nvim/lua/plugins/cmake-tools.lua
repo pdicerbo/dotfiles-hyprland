@@ -1,8 +1,8 @@
 return {
    "Civitasv/cmake-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-        require("cmake-tools").setup({
+    lazy = true,
+    opts = {
             cmake_build_directory = "build",
             -- cmake_soft_link_compile_commands = false,
             cmake_generate_options = {
@@ -34,13 +34,13 @@ return {
                     auto_close_when_success = true,
                 }
             },
-        })
-
-        vim.keymap.set("n", "<F7>",         ":CMakeBuild<CR>",           { desc = "CMake Build project" })
-        vim.keymap.set("n", "<F8>",         ":CMakeInstall<CR>",         { desc = "CMake Install project" })
-        vim.keymap.set('n', '<leader>cs', function() require("lazy").reload({ plugins = { "cmake-tools.nvim" } }) vim.cmd("CMakeSelectCwd") end, { desc = "Reload cmake-tools and select CMake file" })
-        vim.keymap.set("n", "<leader>ct",   ":CMakeRunTest<CR>",         { desc = "CMake Run Test" })
-        vim.keymap.set("n", "<leader>cT",   ":CMakeSelectBuildType<CR>", { desc = "CMake Select Build Type" })
-        vim.keymap.set("n", "<leader>cQ",   ":CMakeStopExecutor<CR>",    { desc = "CMake Stop execution" })
-    end,
+    },
+    keys = {
+        { "<F7>",         ":CMakeBuild<CR>",           desc = "CMake Build project" },
+        { "<F8>",         ":CMakeInstall<CR>",         desc = "CMake Install project" },
+        { '<leader>cs', function() require("lazy").reload({ plugins = { "cmake-tools.nvim" } }) vim.cmd("CMakeSelectCwd") end, desc = "Reload cmake-tools and select CMake file" },
+        { "<leader>ct",   ":CMakeRunTest<CR>",         desc = "CMake Run Test" },
+        { "<leader>cT",   ":CMakeSelectBuildType<CR>", desc = "CMake Select Build Type" },
+        { "<leader>cQ",   ":CMakeStopExecutor<CR>",    desc = "CMake Stop execution" },
+    }
 }

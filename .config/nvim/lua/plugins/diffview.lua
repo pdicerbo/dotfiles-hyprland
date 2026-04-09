@@ -57,63 +57,64 @@ local function diffview_input()
 end
 
 return {
-        "dlyongemallo/diffview.nvim",
-        cmd = { "DiffviewOpen", "DiffviewFileHistory" },
-        keys = {
-            {
-                "<leader>dv",
-                function()
-                    if next(require("diffview.lib").views) == nil then
-                        vim.cmd("DiffviewOpen")
-                    else
-                        vim.cmd("DiffviewClose")
-                    end
-                end,
-                desc = "Toggle Diffview",
-            },
-            { "<leader>dH", "<cmd>DiffviewFileHistory %<cr>", desc = "Open Diff View file history" },
-            { "<leader>dc", "<cmd>DiffviewClose<cr>", desc = "Close DiffView" },
-            { "<leader>db", diffview_branch, desc = "Diffview against branch" },
-            { "<leader>dC", diffview_commit, desc = "Diffview against commit" },
-            { "<leader>dh", diffview_input, desc = "Diffview against commit hash" },
-            { "<leader>dr", diffview_range, desc = "Diffview commit range" },
-            {
-                "<leader>dm",
-                function()
-                    vim.ui.select(
-                        { "Branch", "Commit", "Range (2 commits)", "Enter commit hash" },
-                        { prompt = "Diffview against:" },
-                        function(choice)
-                            if not choice then return end
-                            if choice == "Branch" then
-                                diffview_branch()
-                            elseif choice == "Commit" then
-                                diffview_commit()
-                            elseif choice == "Range (2 commits)" then
-                                diffview_range()
-                            elseif choice == "Enter commit hash" then
-                                diffview_input()
-                            end
-                        end
-                    )
-                end,
-                desc = "Diffview menu",
-            },
+    "dlyongemallo/diffview.nvim",
+    lazy = true,
+    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    keys = {
+        {
+            "<leader>dv",
+            function()
+                if next(require("diffview.lib").views) == nil then
+                    vim.cmd("DiffviewOpen")
+                else
+                    vim.cmd("DiffviewClose")
+                end
+            end,
+            desc = "Toggle Diffview",
         },
-        config = function()
-            local actions = require("diffview.actions")
-            require("diffview").setup({
-                enhanced_diff_hl = true,
-                clean_up_buffers = true,
-                keymaps = {
-                    file_panel = {
-                        { "n",  "u",    actions.scroll_view(-0.25),                                     { desc = "Scroll the view up" } },
-                        { "n",  "d",    actions.scroll_view(0.25),                                      { desc = "Scroll the view down" } },
-                        { "n",  "gf",   function() actions.goto_file_edit() vim.cmd 'tabclose #' end,   { desc = "Go to file in the old tab" } },
-                        { { "n", "x" }, "<space>", false }, -- disable space to avoid conflicts with other keymaps inside file panel
-                        { { "n", "x" }, "w", actions.toggle_select_entry,                               { desc = "Toggle file selection" } },
-                    },
-                }
-            })
-        end,
-    }
+        { "<leader>dH", "<cmd>DiffviewFileHistory %<cr>", desc = "Open Diff View file history" },
+        { "<leader>dc", "<cmd>DiffviewClose<cr>", desc = "Close DiffView" },
+        { "<leader>db", diffview_branch, desc = "Diffview against branch" },
+        { "<leader>dC", diffview_commit, desc = "Diffview against commit" },
+        { "<leader>dh", diffview_input, desc = "Diffview against commit hash" },
+        { "<leader>dr", diffview_range, desc = "Diffview commit range" },
+        {
+            "<leader>dm",
+            function()
+                vim.ui.select(
+                    { "Branch", "Commit", "Range (2 commits)", "Enter commit hash" },
+                    { prompt = "Diffview against:" },
+                    function(choice)
+                        if not choice then return end
+                        if choice == "Branch" then
+                            diffview_branch()
+                        elseif choice == "Commit" then
+                            diffview_commit()
+                        elseif choice == "Range (2 commits)" then
+                            diffview_range()
+                        elseif choice == "Enter commit hash" then
+                            diffview_input()
+                        end
+                    end
+                )
+            end,
+            desc = "Diffview menu",
+        },
+    },
+    config = function()
+        local actions = require("diffview.actions")
+        require("diffview").setup({
+            enhanced_diff_hl = true,
+            clean_up_buffers = true,
+            keymaps = {
+                file_panel = {
+                    { "n",  "u",    actions.scroll_view(-0.25),                                     { desc = "Scroll the view up" } },
+                    { "n",  "d",    actions.scroll_view(0.25),                                      { desc = "Scroll the view down" } },
+                    { "n",  "gf",   function() actions.goto_file_edit() vim.cmd 'tabclose #' end,   { desc = "Go to file in the old tab" } },
+                    { { "n", "x" }, "<space>", false }, -- disable space to avoid conflicts with other keymaps inside file panel
+                    { { "n", "x" }, "w", actions.toggle_select_entry,                               { desc = "Toggle file selection" } },
+                },
+            }
+        })
+    end,
+}

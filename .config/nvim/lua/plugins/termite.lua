@@ -1,6 +1,7 @@
 return {
     -- Stacking float terminal manager for Neovim.
     "ruicsh/termite.nvim",
+    event = "VeryLazy",
     opts = {
         height = 0.35,
         position = "bottom",

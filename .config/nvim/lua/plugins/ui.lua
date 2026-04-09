@@ -213,7 +213,7 @@ return {
 
     {
         'wsdjeg/calendar.nvim',
-        event = "VeryLazy",
+        lazy = true,
         keys = {
             { "<leader>cal", "<Cmd>Calendar<CR>", desc = "Open Calendar" },
         },

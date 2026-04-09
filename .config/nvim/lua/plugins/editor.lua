@@ -25,7 +25,20 @@ return {
                 provider_selector = function(_, _, _)
                     return { "treesitter", "indent" }
                 end,
-                open_fold_hl_timeout = 0, -- Disable highlight timeout after opening
+                open_fold_hl_timeout = 250,
+                preview = {
+                    -- win_config = {
+                    --     border = {'', '─', '', '', '', '─', '', ''},
+                    --     winhighlight = 'Normal:Folded',
+                    --     winblend = 150
+                    -- },
+                    mappings = {
+                        scrollU = '<C-u>',
+                        scrollD = '<C-d>',
+                        jumpTop = '[',
+                        jumpBot = ']'
+                    }
+                },
             })
 
             vim.o.foldenable = true
@@ -51,7 +64,7 @@ return {
     {
         -- discovering motions (Both vertical and horizontal) to navigate your current buffer
         "tris203/precognition.nvim",
-        event = "VeryLazy",
+        lazy = true,
         opts = {
             startVisible = false,
             showBlankVirtLine = false
@@ -61,6 +74,7 @@ return {
 
     {
         -- automatically toggle between relative and absolute line numbers
-        "sitiom/nvim-numbertoggle"
+        "sitiom/nvim-numbertoggle",
+        event = "VeryLazy",
     },
 }

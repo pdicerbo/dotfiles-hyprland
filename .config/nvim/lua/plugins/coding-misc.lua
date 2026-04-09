@@ -1,24 +1,27 @@
 return {
     {
         "rmagatti/auto-session",
-        config = function()
-            local auto_session = require("auto-session")
-
-            auto_session.setup({
-                auto_restore = false,
-                suppressed_dirs = { "~/", "~/Dev/", "~/Downloads", "~/Documents", "~/Desktop/" }
-            })
-
-            local keymap = vim.keymap
-            keymap.set("n", "<leader>wr", "<cmd>AutoSession restore<CR>",   { desc = "Restore session for cwd" }) -- restore last workspace session for current directory
-            keymap.set("n", "<leader>ws", "<cmd>AutoSession save<CR>",      { desc = "Save session for auto session root dir" }) -- save workspace session for current working directory
-        end,
+        opts = {
+            auto_restore = false,
+            bypass_save_filetypes = { "snacks_dashboard" },
+            cwd_change_handling = true,
+            suppressed_dirs = { "~/", "~/Dev/", "~/Downloads", "~/Documents", "~/Desktop/" },
+            session_lens = {
+                picker = "snacks",
+            },
+        },
+        keys = {
+            { "<leader>wr", "<cmd>AutoSession restore<CR>",          desc = "Restore session for cwd" },                                       -- restore last workspace session for current directory
+            { "<leader>ws", "<cmd>AutoSession save<CR>",             desc = "Save session for auto session root dir" },                        -- save workspace session for current working directory
+            { "<leader>wf", "<cmd>AutoSession search<CR>",           desc = "Search available sessions and restore" },                         -- search available sessions and restore
+            { "<leader>wx", "<cmd>AutoSession purgeOrphaned<CR>",    desc = "removes all orphaned sessions with no working directory left" },  -- removes all orphaned sessions with no working directory left
+        },
     },
 
     {
         "cappyzawa/trim.nvim",
-        config = function()
-            require("trim").setup({
+        event = "VeryLazy",
+        opts = {
                 ft_blocklist = {"markdown", "snacks-dashboard"},
                 trim_on_write = true,
                 trim_trailing = true,
@@ -28,22 +31,16 @@ return {
                 highlight_bg = '#ff0000', -- or 'red'
                 highlight_ctermbg = 'red',
                 notifications = true,
-            })
-            vim.keymap.set("n", "<leader>tr", ":TrimToggle<CR>", { desc = "Toggle Trim on save" })
-        end,
-    },
-
-    {
-        "mbbill/undotree",
-        config = function()
-            vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
-        end,
+        },
+        keys = {
+            { "<leader>tr", "<cmd>TrimToggle<CR>", desc = "Toggle Trim on save" },
+        },
     },
 
     {
         -- breadcrumbs in winbar
         'Bekaboo/dropbar.nvim',
-
+        event = "VeryLazy",
         config = function()
             local dropbar_api = require('dropbar.api')
             -- vim.keymap.set('n', '<Leader>;', dropbar_api.pick, { desc = 'Pick symbols in winbar' })

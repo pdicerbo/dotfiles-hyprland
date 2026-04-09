@@ -99,6 +99,10 @@ vim.keymap.set({ "n", "v" }, "<leader>dd", ":t.<CR>", { desc = "Duplicate line o
 
 vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
+-- use native undotree
+vim.cmd("packadd nvim.undotree")
+vim.keymap.set("n", "<leader>U", require("undotree").open, { desc = "Open undo tree" })
+
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
     pattern = {"*.trc", "*.log", "*.evt"},
     callback = function()

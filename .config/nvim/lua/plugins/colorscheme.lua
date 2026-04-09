@@ -7,7 +7,8 @@ return {
     {
         "catppuccin/nvim",
         name = "catppuccin",
-        lazy = true,
+        lazy = false,       -- Load at startup
+        priority = 1000,    -- High priority
         config = function()
             require("catppuccin").setup({
                 integrations = {
@@ -22,19 +23,21 @@ return {
                     },
                 }
             })
+            require("catppuccin").load('mocha')
+            vim.cmd("colorscheme catppuccin")
         end
     },
 
     {
         "folke/tokyonight.nvim",
-        lazy = false,  -- Load at startup
-        priority = 1000,  -- High priority
+        lazy = true,
+        -- priority = 1000,  -- High priority
         opts = {
             style = "storm",
         },
         config = function(_, opts)
             require("tokyonight").setup(opts)
-            vim.cmd("colorscheme tokyonight")
+            -- vim.cmd("colorscheme tokyonight")
         end,
     },
 

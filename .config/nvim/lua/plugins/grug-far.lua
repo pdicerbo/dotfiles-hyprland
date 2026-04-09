@@ -16,7 +16,7 @@ return   {
     end,
     keys = {
         {
-            "<leader>gf",
+            "<leader>gfs",
             function()
                 local mode = vim.fn.mode()
                 if mode == "v" or mode == "V" or mode == "\22" then
@@ -29,7 +29,7 @@ return   {
             desc = "Search and Replace",
         },
         {
-            "<leader>ge",
+            "<leader>gfe",
             function()
                 local grug = require("grug-far")
                 local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
@@ -45,6 +45,6 @@ return   {
         },
         { "<leader>R", mode = { "n" }, function() require('grug-far').open({ prefills = { paths = vim.fn.expand("%") } }) end, desc = "Replace in current file" },
         { "<leader>R", mode = { "x" }, function() require('grug-far').with_visual_selection({ prefills = { paths = vim.fn.expand("%") } }) end, desc = "Replace in current file" },
-        { "<leader>gfs", mode = { "n", "v" }, function() require('grug-far').open({ visualSelectionUsage = 'operate-within-range' }) end, desc = "Search and Replace within range" },
+        { "<leader>gfr", mode = { "n", "v" }, function() require('grug-far').open({ visualSelectionUsage = 'operate-within-range' }) end, desc = "Search and Replace within range" },
     },
 }

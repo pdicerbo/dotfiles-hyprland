@@ -59,13 +59,6 @@ M.commands = {
     },
 
     {
-        name = "Undo tree",
-        action = function()
-            vim.cmd("UndotreeToggle")
-        end,
-    },
-
-    {
         name = "Dim: Toggle",
         action = function()
             local snacks_dim = require("snacks").dim

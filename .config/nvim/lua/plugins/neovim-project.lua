@@ -29,7 +29,7 @@ return {
             { "nvim-lua/plenary.nvim" },
             { "Shatur/neovim-session-manager" },
         },
-        lazy = false,
+        lazy = true,
         priority = 100,
         keys = {
             { "<M-f>", "<cmd>NeovimProjectDiscover history<CR>", desc = "Discover Projects" },
