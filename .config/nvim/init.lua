@@ -23,6 +23,7 @@ require("vim-options")
 -- Setup lazy.nvim
 require("lazy").setup("plugins")
 vim.lsp.enable('clangd')
+vim.lsp.enable('copilot')
 
 
 -- Git environment setup for bare repo (dotfiles managemen)
