@@ -8,5 +8,5 @@ export npm_config_prefix="$HOME/.local"
 
 # decomment following lines to enable auto startx
 if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
-    exec startx # >& MyXLog
+    start-hyprland
 fi
