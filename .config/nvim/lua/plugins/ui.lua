@@ -108,41 +108,6 @@ return {
         config = function()
             local lualine = require("lualine")
             local lazy_status = require("lazy.status") -- to configure lazy pending updates count
-
-            -- local colors = {
-            --     color0 = "#092236",
-            --     color1 = "#ff5874",
-            --     color2 = "#3b8fcf",
-            --     color3 = "#1c1e26",
-            --     color6 = "#a1aab8",
-            --     color7 = "#45a239",
-            --     color8 = "#0b9ded",
-            -- }
-            -- local my_lualine_theme = {
-            --     replace = {
-            --         a = { fg = colors.color0, bg = colors.color1, gui = "bold" },
-            --         b = { fg = colors.color2, bg = colors.color3 },
-            --     },
-            --     inactive = {
-            --         a = { fg = colors.color6, bg = colors.color3, gui = "bold" },
-            --         b = { fg = colors.color6, bg = colors.color3 },
-            --         c = { fg = colors.color6, bg = colors.color3 },
-            --     },
-            --     normal = {
-            --         a = { fg = colors.color0, bg = colors.color7, gui = "bold" },
-            --         b = { fg = colors.color2, bg = colors.color3 },
-            --         c = { fg = colors.color2, bg = colors.color3 },
-            --     },
-            --     visual = {
-            --         a = { fg = colors.color0, bg = colors.color8, gui = "bold" },
-            --         b = { fg = colors.color2, bg = colors.color3 },
-            --     },
-            --     insert = {
-            --         a = { fg = colors.color0, bg = colors.color2, gui = "bold" },
-            --         b = { fg = colors.color2, bg = colors.color3 },
-            --     },
-            -- }
-
             local mode = {
                 'mode',
                 fmt = function(str)
@@ -171,11 +136,7 @@ return {
             lualine.setup({
                 icons_enabled = true,
                 options = {
-                    -- theme = my_lualine_theme,
-                    -- theme = "tokyonight-storm",
-                    theme = "everforest",
-                    -- component_separators = { left = "|", right = "|" },
-                    -- section_separators = { left = "|", right = "" },
+                    theme = "auto",
                 },
                 sections = {
                     lualine_a = { mode },
@@ -183,8 +144,16 @@ return {
                     lualine_c = { diff, filename },
                     lualine_x = {
                         {
-                            -- require("noice").api.statusline.mode.get,
-                            -- cond = require("noice").api.statusline.mode.has,
+                            require("noice").api.status.mode.get,
+                            cond = require("noice").api.status.mode.has,
+                            color = { fg = "#ff9e64" },
+                        },
+                        {
+                            require("noice").api.status.search.get,
+                            cond = require("noice").api.status.search.has,
+                            color = { fg = "#ff9e64" },
+                        },
+                        {
                             lazy_status.updates,
                             cond = lazy_status.has_updates,
                             color = { fg = "#ff9e64" },
@@ -192,6 +161,32 @@ return {
                         { "encoding",},
                         { "fileformat" },
                         { "filetype" },
+                        {
+                            function()
+                                local status = require("sidekick.status").get()
+                                return status and "🤖 " or ""
+                            end,
+                            color = function()
+                                local status = require("sidekick.status")
+                                return status.get() and status.get().busy and "DiagnosticWarn" or "Special"
+                            end,
+                            cond = function()
+                                local status = require("sidekick.status")
+                                return status.get() ~= nil
+                            end
+                        },
+                        {
+                            function()
+                                local status = require("sidekick.status").cli()
+                                return " " .. (#status > 1 and #status or "")
+                            end,
+                            cond = function()
+                                return #require("sidekick.status").cli() > 0
+                            end,
+                            color = function()
+                                return "Special"
+                            end,
+                        }
                     },
                 },
 

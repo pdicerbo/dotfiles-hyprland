@@ -26,7 +26,12 @@ vim.opt.termguicolors = true
 vim.opt.winborder = 'rounded'
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.readonly = true
-vim.opt.modifiable = false
+
+-- Avoid modifiable = off in order to use flash to jump into the buffer,
+-- therefore block accidental edits without breaking plugins
+for _, key in ipairs({ "i", "I", "a", "A", "o", "O", "c", "C" }) do
+    vim.keymap.set("n", key, "<nop>")
+end
 
 -- Keep cursor in the middle of the screen when jumping up and down
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "move down in buffer with cursor centered" })
@@ -34,6 +39,11 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "move up in buffer with cursor 
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("n", "q", ":q<CR>")
+
+-- Highlight yanked text briefly
+vim.api.nvim_create_autocmd("TextYankPost", {
+    callback = function() vim.highlight.on_yank() end,
+})
 
 -- toggle line wrap
 vim.keymap.set("n", "<leader>wl", "<cmd>set wrap!<CR>", { desc = "Toggle line wrap" })
@@ -64,6 +74,23 @@ require("lazy").setup(
         {
             "typicode/bg.nvim", lazy = false
         },
+        {
+            "folke/flash.nvim",
+            lazy = false,
+            ---@type Flash.Config
+            opts = {
+                search = {
+                    multi_window = false,
+                },
+            },
+            -- stylua: ignore
+            keys = {
+                { "s", mode = { "n", "x", "o" }, function()
+                    local ok = pcall(require("flash").jump)
+                    if not ok then vim.schedule(function() require("flash").jump() end) end
+                end, desc = "Flash" },
+            },
+        }
     },
     {
         -- Lazy configuration
@@ -77,3 +104,17 @@ require("lazy").setup(
             },
         },
     })
+
+-- Suppress flash's "Invalid cursor column" redraw errors (flash still works correctly)
+local orig_notify = vim.notify
+vim.notify = function(msg, level, opts)
+    if type(msg) == "string" and msg:find("Flash error during redraw") then return end
+    orig_notify(msg, level, opts)
+end
+
+-- FlashMatch: the characters that matched your search
+-- FlashLabel: the jump label shown on top
+-- FlashCurrent: the currently selected match
+vim.api.nvim_set_hl(0, "FlashMatch",   { bg = "#ffaa00", fg = "#000000", bold = true })
+vim.api.nvim_set_hl(0, "FlashLabel",   { bg = "#ff007c", fg = "#ffffff", bold = true })
+vim.api.nvim_set_hl(0, "FlashCurrent", { bg = "#00aaff", fg = "#000000", bold = true })

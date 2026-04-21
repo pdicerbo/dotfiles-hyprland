@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") <input_file> [OPTIONS]
+
+Upscale an image using ImageMagick.
+
+Arguments:
+  input_file        Path to the input image (required)
+
+Options:
+  -W, --width       Target width in pixels
+  -H, --height      Target height in pixels
+  -f, --format      Output format extension (e.g. png, jpg, webp)
+  -o, --output      Output file path (default: overwrites the input file)
+  -k, --keep        Keep the original by renaming it to <name>_init.<ext>
+  -h, --help        Show this help message
+
+Notes:
+  - If only one of -W / -H is given, the other dimension scales proportionally.
+  - If neither -W nor -H is given, the image is upscaled to 4K (3840x2160).
+  - By default the upscaled image overwrites the input file.
+  - With -k the original is preserved as <name>_init.<ext> before overwriting.
+  - With -o the output is written to the given path and the input is untouched,
+    unless -k is also given, in which case the original is still renamed.
+
+Examples:
+  $(basename "$0") photo.jpg -W 3840
+  $(basename "$0") photo.jpg -W 1920 -H 1080 -k
+  $(basename "$0") photo.jpg -W 2560 -f png -o /tmp/out.png
+  $(basename "$0") photo.jpg -k -o /tmp/out.jpg
+EOF
+    exit 0
+}
+
+# --- Argument parsing ---
+
+INPUT=""
+WIDTH=""
+HEIGHT=""
+FORMAT=""
+OUTPUT_ARG=""
+KEEP=0
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            usage
+            ;;
+        -W|--width)
+            WIDTH="$2"; shift 2
+            ;;
+        -H|--height)
+            HEIGHT="$2"; shift 2
+            ;;
+        -f|--format)
+            FORMAT="${2#.}"; shift 2   # strip leading dot if present
+            ;;
+        -o|--output)
+            OUTPUT_ARG="$2"; shift 2
+            ;;
+        -k|--keep)
+            KEEP=1; shift
+            ;;
+        -*)
+            echo "Error: unknown option '$1'" >&2
+            echo "Run '$(basename "$0") --help' for usage." >&2
+            exit 1
+            ;;
+        *)
+            if [[ -z "$INPUT" ]]; then
+                INPUT="$1"
+            else
+                echo "Error: unexpected argument '$1'" >&2
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+# --- Validation ---
+
+if [[ -z "$INPUT" ]]; then
+    echo "Error: input file is required." >&2
+    echo "Run '$(basename "$0") --help' for usage." >&2
+    exit 1
+fi
+
+if [[ ! -f "$INPUT" ]]; then
+    echo "Error: file not found: $INPUT" >&2
+    exit 1
+fi
+
+if [[ -n "$WIDTH" && ! "$WIDTH" =~ ^[1-9][0-9]*$ ]]; then
+    echo "Error: width must be a positive integer, got '$WIDTH'" >&2
+    exit 1
+fi
+
+if [[ -n "$HEIGHT" && ! "$HEIGHT" =~ ^[1-9][0-9]*$ ]]; then
+    echo "Error: height must be a positive integer, got '$HEIGHT'" >&2
+    exit 1
+fi
+
+# --- Build geometry string ---
+
+if [[ -n "$WIDTH" && -n "$HEIGHT" ]]; then
+    GEOMETRY="${WIDTH}x${HEIGHT}"
+elif [[ -n "$WIDTH" ]]; then
+    GEOMETRY="${WIDTH}x"
+elif [[ -n "$HEIGHT" ]]; then
+    GEOMETRY="x${HEIGHT}"
+else
+    GEOMETRY="3840x2160"
+fi
+
+# --- Build output filename ---
+
+DIR="$(dirname "$INPUT")"
+BASENAME="$(basename "$INPUT")"
+NAME="${BASENAME%.*}"
+ORIG_EXT="${BASENAME##*.}"
+
+if [[ -n "$OUTPUT_ARG" ]]; then
+    OUTPUT="$OUTPUT_ARG"
+elif [[ -n "$FORMAT" ]]; then
+    OUTPUT="${DIR}/${NAME}.${FORMAT}"
+else
+    OUTPUT="$INPUT"
+fi
+
+# --- Keep original if requested ---
+
+if [[ "$KEEP" -eq 1 ]]; then
+    BACKUP="${DIR}/${NAME}_init.${ORIG_EXT}"
+    echo "Keeping original as: $BACKUP"
+    mv "$INPUT" "$BACKUP"
+    INPUT="$BACKUP"
+fi
+
+# --- Run ---
+
+echo "Input:    $INPUT"
+echo "Geometry: $GEOMETRY"
+echo "Output:   $OUTPUT"
+
+magick "$INPUT" \
+    -alpha on \
+    -virtual-pixel transparent \
+    -filter Lanczos \
+    -resize "$GEOMETRY" \
+    -alpha off \
+    "$OUTPUT"
+
+echo "Done."
