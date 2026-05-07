@@ -111,8 +111,6 @@ return {
                     { "n",  "u",    actions.scroll_view(-0.25),                                     { desc = "Scroll the view up" } },
                     { "n",  "d",    actions.scroll_view(0.25),                                      { desc = "Scroll the view down" } },
                     { "n",  "gf",   function() actions.goto_file_edit() vim.cmd 'tabclose #' end,   { desc = "Go to file in the old tab" } },
-                    { { "n", "x" }, "<space>", false }, -- disable space to avoid conflicts with other keymaps inside file panel
-                    { { "n", "x" }, "w", actions.toggle_select_entry,                               { desc = "Toggle file selection" } },
                 },
             }
         })
