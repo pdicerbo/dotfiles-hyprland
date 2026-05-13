@@ -348,11 +348,8 @@ return {
         },
         { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
         { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
-        { "<leader>yu", function()
-            vim.fn.setreg("+", "#" .. vim.uri_from_fname(vim.fn.expand("%:p")))
-            Snacks.notify.info("Copied URI: #" .. vim.uri_from_fname(vim.fn.expand("%:p")))
-        end, desc = "Copy buffer URI to clipboard (e.g. for CopilotChat)" },
         { "<leader>yb", function()
+            -- collect all listed buffers that have an associated file on disk
             local buffers = {}
             for _, buf in ipairs(vim.api.nvim_list_bufs()) do
                 if vim.bo[buf].buflisted then
@@ -367,7 +364,7 @@ return {
                 return
             end
             Snacks.picker({
-                title = "Select buffers to copy URIs (Tab to select, Enter to confirm)",
+                title = "Select buffers to copy (Tab to select, Enter to confirm)",
                 items = vim.tbl_map(function(b)
                     return {
                         text = vim.fn.fnamemodify(b.name, ":."),
@@ -377,23 +374,62 @@ return {
                 end, buffers),
                 confirm = function(picker)
                     local sel = picker:selected()
-                    local uris = {}
+                    local files = {}
                     if #sel > 0 then
                         for _, item in ipairs(sel) do
-                            table.insert(uris, "#" .. vim.uri_from_fname(item.file))
+                            table.insert(files, item.file)
                         end
                     else
+                        -- no multi-selection: fall back to the item under the cursor
                         local current = picker:current()
                         if current then
-                            table.insert(uris, "#" .. vim.uri_from_fname(current.file))
+                            table.insert(files, current.file)
                         end
                     end
                     picker:close()
-                    if #uris > 0 then
-                        local result = table.concat(uris, "\n")
-                        vim.fn.setreg("+", result)
-                        Snacks.notify.info("Copied " .. #uris .. " URI(s):\n" .. result)
-                    end
+                    if #files == 0 then return end
+                    -- defer until the picker window is fully closed; otherwise snacks
+                    -- cannot grab focus and call startinsert for the input prompt
+                    vim.schedule(function()
+                        Snacks.input({ prompt = "Copy " .. #files .. " file(s) to: " }, function(dest)
+                            -- input callback fires while still in insert mode; leave it immediately
+                            vim.cmd.stopinsert()
+                            if not dest or dest == "" then return end
+                            dest = vim.fn.expand(dest)
+                            vim.fn.mkdir(dest, "p")
+                            -- resolve a collision-free target path, handling both files that share
+                            -- the same basename across different source directories and files that
+                            -- already exist at the destination; appends _1, _2, … before the extension
+                            local used_names = {}
+                            local function unique_path(filename)
+                                local base = vim.fn.fnamemodify(filename, ":r")
+                                local ext = vim.fn.fnamemodify(filename, ":e")
+                                local ext_part = ext ~= "" and ("." .. ext) or ""
+                                local name, path = filename, dest .. "/" .. filename
+                                local i = 1
+                                while used_names[name] or vim.uv.fs_stat(path) do
+                                    name = base .. "_" .. i .. ext_part
+                                    path = dest .. "/" .. name
+                                    i = i + 1
+                                end
+                                used_names[name] = true
+                                return path
+                            end
+                            local failed = {}
+                            for _, src in ipairs(files) do
+                                local filename = vim.fn.fnamemodify(src, ":t")
+                                local ok, err = vim.uv.fs_copyfile(src, unique_path(filename))
+                                if not ok then
+                                    table.insert(failed, filename .. " (" .. tostring(err) .. ")")
+                                end
+                            end
+                            if #failed > 0 then
+                                Snacks.notify.error("Failed to copy:\n" .. table.concat(failed, "\n"))
+                            else
+                                Snacks.notify.info("Copied " .. #files .. " file(s) to " .. dest)
+                            end
+                        end)
+                    end)
                 end,
                 win = {
                     input = {
@@ -403,6 +439,6 @@ return {
                     },
                 },
             })
-        end, desc = "Copy multiple buffer URIs to clipboard (for CopilotChat)" },
+        end, desc = "Copy selected buffers to a destination path" },
     },
 }

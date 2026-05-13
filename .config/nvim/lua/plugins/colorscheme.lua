@@ -23,8 +23,8 @@ return {
                     },
                 }
             })
-            require("catppuccin").load('mocha')
-            vim.cmd("colorscheme catppuccin")
+            -- require("catppuccin").load('mocha')
+            -- vim.cmd("colorscheme catppuccin")
         end
     },
 
@@ -74,6 +74,23 @@ return {
     {
         "adibhanna/forest-night.nvim",
         lazy = true,
+    },
+
+
+    {
+        'D0nw0r/dark2026.nvim',
+        lazy = false,
+        priority = 1000,
+        config = function()
+            vim.cmd.colorscheme 'dark2026'
+            local function set_hl()
+                vim.api.nvim_set_hl(0, "FlashLabel", { bg = "#000cb3", fg = "#ffffff", bold = true })
+                vim.api.nvim_set_hl(0, "SnacksPickerListCursorLine", { bg = "#2a3f6f", bold = true })
+                vim.api.nvim_set_hl(0, "SnacksPickerDir", { fg = "#7aa2f7" })
+            end
+            set_hl()
+            vim.api.nvim_create_autocmd("ColorScheme", { callback = set_hl })
+        end,
     },
 
     -- {

@@ -14,7 +14,6 @@ return {
 
     {
         "github/copilot.vim",
-        version = "v1.45.0",
         event = "VeryLazy",
         config = function()
             -- For copilot.vim
