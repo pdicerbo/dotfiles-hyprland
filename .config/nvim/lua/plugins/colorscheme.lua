@@ -87,6 +87,7 @@ return {
                 vim.api.nvim_set_hl(0, "FlashLabel", { bg = "#000cb3", fg = "#ffffff", bold = true })
                 vim.api.nvim_set_hl(0, "SnacksPickerListCursorLine", { bg = "#2a3f6f", bold = true })
                 vim.api.nvim_set_hl(0, "SnacksPickerDir", { fg = "#7aa2f7" })
+                vim.api.nvim_set_hl(0, "NotifyBackground", { bg = "#000000" })
             end
             set_hl()
             vim.api.nvim_create_autocmd("ColorScheme", { callback = set_hl })

@@ -35,6 +35,9 @@ return {
                     nerdFontsVersion = "3",
                 },
             },
+            theme = {
+                inactiveBorderColor        = { fg = "Comment" },
+            },
             win = {
                 style = "lazygit",
             },
