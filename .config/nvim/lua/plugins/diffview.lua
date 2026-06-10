@@ -57,9 +57,15 @@ local function diffview_input()
 end
 
 return {
-    "dlyongemallo/diffview.nvim",
+    "dlyongemallo/diffview-plus.nvim",
     lazy = true,
-    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    cmd = {
+        "DiffviewOpen",
+        "DiffviewToggle",
+        "DiffviewFileHistory",
+        "DiffviewDiffFiles",
+        "DiffviewLog",
+    },
     keys = {
         {
             "<leader>dv",

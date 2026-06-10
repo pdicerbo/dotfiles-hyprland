@@ -24,10 +24,10 @@ vim.opt.winborder = 'rounded'
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- resize vertical splits with Ctrl+Left and Ctrl+Right
-vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
-vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { silent = true, desc = "Decrease window width" })
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { silent = true, desc = "Increase window width" })
 
--- navigate splits with Ctrl+h/j/k/l
+-- navigate splits with Alt+H/J/K/L
 vim.keymap.set("n", "<M-H>", "<C-w>h", { desc = "Move to left window" })
 vim.keymap.set("n", "<M-J>", "<C-w>j", { desc = "Move to bottom window" })
 vim.keymap.set("n", "<M-K>", "<C-w>k", { desc = "Move to top window" })
@@ -95,7 +95,8 @@ vim.keymap.set("n", "<leader>bb", "<cmd>b#<CR>", { desc = "Reopen latest buffer"
 vim.keymap.set("n", "<M-w>", "<cmd>tabclose<CR>", { desc = "Close current tab (Alt-w)" })
 
 -- Duplicate line or selection without copying to clipboard
-vim.keymap.set({ "n", "v" }, "<leader>dd", ":t.<CR>", { desc = "Duplicate line or selection without copying to clipboard" })
+vim.keymap.set("n", "<leader>dd", ":t.<CR>", { desc = "Duplicate line or selection without copying to clipboard" })
+vim.keymap.set("v", "<leader>dd", ":t'><CR>", { desc = "Duplicate line or selection without copying to clipboard" })
 
 vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 

@@ -50,12 +50,16 @@ return {
 
     {
         "harrisoncramer/gitlab.nvim",
+        lazy = true,
+        keys = {
+            { "glc",  function() return require("gitlab").choose_merge_request() end, mode = "n",  desc = "Gitlab: Choose merge request" },
+        },
         dependencies = {
             "MunifTanjim/nui.nvim",
             "nvim-lua/plenary.nvim",
-            "dlyongemallo/diffview.nvim",
-            "stevearc/dressing.nvim", -- Recommended but not required. Better UI for pickers.
-            "nvim-tree/nvim-web-devicons", -- Recommended but not required. Icons in discussion tree.
+            "dlyongemallo/diffview-plus.nvim",
+            "stevearc/dressing.nvim",       -- Recommended but not required. Better UI for pickers.
+            "nvim-tree/nvim-web-devicons",  -- Recommended but not required. Icons in discussion tree.
         },
         build = function () require("gitlab.server").build(true) end, -- Builds the Go binary
         config = function()

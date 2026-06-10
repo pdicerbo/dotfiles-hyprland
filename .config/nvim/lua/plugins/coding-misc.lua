@@ -1,6 +1,8 @@
 return {
     {
         "rmagatti/auto-session",
+        lazy = true,
+        cmd = { "AutoSession" },
         opts = {
             auto_restore = false,
             bypass_save_filetypes = { "snacks_dashboard" },
@@ -33,7 +35,7 @@ return {
                 notifications = true,
         },
         keys = {
-            { "<leader>tr", "<cmd>TrimToggle<CR>", desc = "Toggle Trim on save" },
+            { "<leader>TT", "<cmd>TrimToggle<CR>", desc = "Toggle Trim on save" },
         },
     },
 

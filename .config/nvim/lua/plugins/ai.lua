@@ -6,10 +6,10 @@ return {
         opts = {
             -- "copilot-chat" and "codecompanion" are the buffer filetypes used by those
             -- AI chat plugins, so their responses get the same rich formatting as .md files.
-            file_types = { "markdown", "copilot-chat", "codecompanion" },
+            file_types = { "markdown", "copilot-chat" },
         },
         -- Lazy-load only when one of these filetypes is opened.
-        ft = { "markdown", "copilot-chat", "codecompanion" },
+        ft = { "markdown", "copilot-chat" },
     },
 
     {
@@ -50,7 +50,7 @@ return {
 
     {
         "coder/claudecode.nvim",
-        lazy = false,
+        event = "VeryLazy",
         config = function()
             -- Headless mode: only runs the WebSocket/MCP server for IDE awareness.
             -- sidekick.nvim handles the terminal UI.
@@ -125,6 +125,7 @@ return {
         -- claudecode.nvim acts as the backend: it runs the WebSocket/MCP server that lets
         -- the claude CLI report back file edits and diffs to Neovim.
         "folke/sidekick.nvim",
+        event = "VeryLazy",
         opts = {
             cli = {
                 win = {

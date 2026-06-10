@@ -2,6 +2,7 @@ return {
    "Civitasv/cmake-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     lazy = true,
+    cmd = { "CMakeBuild", "CMakeInstall", "CMakeRunTest", "CMakeSelectBuildType", "CMakeStopExecutor", "CMakeGenerate", "CMakeClean", "CMakeSettings" },
     opts = {
             cmake_build_directory = "build",
             -- cmake_soft_link_compile_commands = false,
