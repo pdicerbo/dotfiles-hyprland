@@ -13,6 +13,31 @@ return {
     },
 
     {
+        "iamcco/markdown-preview.nvim",
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = { "markdown" },
+        -- build = "cd app && npm install",
+        build = "cd app && npm install && git restore .",
+        lazy = true,
+        init = function()
+            vim.g.mkdp_filetypes = { "markdown" }
+        end,
+        config = function()
+            -- set firefox as the default browser for markdown preview
+            vim.g.mkdp_browser = 'firefox'
+
+            -- don't automatically close the preview when leaving the markdown buffer
+            vim.g.mkdp_auto_close = 0
+
+            -- reuse previous opened preview window when you preview markdown file
+            vim.g.mkdp_combine_preview = 0
+        end,
+        keys = {
+            { "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", desc = "Toggle Markdown Preview" },
+        },
+    },
+
+    {
         "github/copilot.vim",
         event = "VeryLazy",
         config = function()
@@ -58,6 +83,7 @@ return {
                 ---@diagnostic disable-next-line: missing-fields
                 terminal = {
                     provider = "none",
+                    auto_insert = false,
                 },
                 diff_opts = {
                     layout = "vertical",
@@ -97,19 +123,58 @@ return {
                 end
             end, { desc = "Close all Claude diffs" })
 
-            -- Add convenient terminal exit keybinding
+            -- TermOpen fires whenever a new terminal buffer is created (including the
+            -- sidekick split). We scope all mappings to the current buffer (buffer = 0)
+            -- so they don't leak into non-terminal windows.
             vim.api.nvim_create_autocmd("TermOpen", {
                 pattern = "*",
                 callback = function()
                     local opts = { buffer = 0 }
-                    -- Easy escape from terminal mode with Ctrl+q
+                    -- <C-q> and <Esc><Esc> both exit terminal-insert mode (<C-\><C-n>).
+                    -- Two options are provided so muscle memory from different workflows works.
                     vim.keymap.set("t", "<C-q>", "<C-\\><C-n>", opts)
-                    -- Or use Escape key twice for extra convenience
                     vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", opts)
-                    -- Close terminal buffer easily with Ctrl+w q after escaping
+                    -- Once in normal mode, <C-q> closes the terminal window entirely.
+                    -- This makes the full dismiss flow: <C-q> (exit insert) → <C-q> (close).
                     vim.keymap.set("n", "<C-q>", ":q<CR>", opts)
                 end,
             })
+
+            -- ClaudeCodeDiffOpened is fired by claudecode.nvim after it has opened a
+            -- side-by-side diff tab showing the AI's proposed changes.  ev.data carries
+            -- two window handles: diff_window (the proposed/scratch buffer on the left)
+            -- and target_window (the real file on the right).
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "ClaudeCodeDiffOpened",
+                callback = function(ev)
+                    local data = ev.data or {}
+
+                    -- Enable folding at level 0 in both windows so unchanged hunks are
+                    -- collapsed by default, making it easier to scan only what changed.
+                    for _, win in ipairs({ data.diff_window, data.target_window }) do
+                        if win and vim.api.nvim_win_is_valid(win) then
+                            vim.api.nvim_set_option_value("foldenable", true, { win = win })
+                            vim.api.nvim_set_option_value("foldlevel", 0, { win = win })
+                        end
+                    end
+
+                    -- Move focus to the diff (proposed) window and make sure we land in
+                    -- normal mode — the terminal may have left us in insert mode.
+                    -- Then jump to the first diff hunk (]c) and center it on screen (zz)
+                    -- so the review starts at the very first change without manual scrolling.
+                    local diff_win = data.diff_window
+                    if diff_win and vim.api.nvim_win_is_valid(diff_win) then
+                        vim.api.nvim_set_current_win(diff_win)
+                        vim.cmd("stopinsert")
+                        vim.api.nvim_win_call(diff_win, function()
+                            vim.cmd("normal! gg")
+                            pcall(vim.cmd, "normal! ]c")
+                            vim.cmd("normal! zz")
+                        end)
+                    end
+                end,
+            })
+
         end,
         keys = {
             { "<leader>a", "",                               desc = "AI/Claude Code", mode = { "n", "v" } },
@@ -126,6 +191,7 @@ return {
         -- the claude CLI report back file edits and diffs to Neovim.
         "folke/sidekick.nvim",
         event = "VeryLazy",
+        cmd = { "Sidekick" },
         opts = {
             cli = {
                 win = {

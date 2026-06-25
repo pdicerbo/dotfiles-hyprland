@@ -205,6 +205,11 @@ vim.api.nvim_create_autocmd({ 'Filetype' }, {
 
             pcall(vim.treesitter.start, event.buf)
             vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+
+            -- Don't impose treesitter folding on diff windows (Claude Code diffs,
+            -- :diffsplit, fugitive, etc.) — let native foldmethod=diff stand.
+            if vim.wo.diff then return end
+
             vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
             vim.wo.foldmethod = 'expr'
         end)
