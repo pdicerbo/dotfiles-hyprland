@@ -51,7 +51,7 @@ vim.keymap.set("n", "<leader>wl", "<cmd>set wrap!<CR>", { desc = "Toggle line wr
 vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- Bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lazypath = vim.fn.stdpath("data") .. "/lazy-scrollback-pager/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
     local lazyrepo = "https://github.com/folke/lazy.nvim.git"
     local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
@@ -70,26 +70,31 @@ vim.opt.rtp:prepend(lazypath)
 -- Setup lazy.nvim
 require("lazy").setup(
     {
+        root = vim.fn.stdpath("data") .. "/lazy-scrollback-pager", -- directory where plugins will be installed
+        lockfile = vim.fn.stdpath("data") .. "/lazy-scrollback-pager/lazy-lock.json", -- lockfile generated after running update.
         -- Add plugins here, for example:
-        {
-            "typicode/bg.nvim", lazy = false
-        },
-        {
-            "folke/flash.nvim",
-            lazy = false,
-            ---@type Flash.Config
-            opts = {
-                search = {
-                    multi_window = false,
+        spec = {
+
+            {
+                "pdicerbo/bg.nvim", lazy = false
+            },
+            {
+                "folke/flash.nvim",
+                lazy = false,
+                ---@type Flash.Config
+                opts = {
+                    search = {
+                        multi_window = false,
+                    },
                 },
-            },
-            -- stylua: ignore
-            keys = {
-                { "s", mode = { "n", "x", "o" }, function()
-                    local ok = pcall(require("flash").jump)
-                    if not ok then vim.schedule(function() require("flash").jump() end) end
-                end, desc = "Flash" },
-            },
+                -- stylua: ignore
+                keys = {
+                    { "s", mode = { "n", "x", "o" }, function()
+                        local ok = pcall(require("flash").jump)
+                        if not ok then vim.schedule(function() require("flash").jump() end) end
+                    end, desc = "Flash" },
+                },
+            }
         }
     },
     {

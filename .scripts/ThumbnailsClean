@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/wall-picker/thumbnails"
+rm -rf $CACHE_DIR

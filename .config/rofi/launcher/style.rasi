@@ -142,7 +142,7 @@ element selected.normal {
 element-icon {
     background-color:            transparent;
     text-color:                  inherit;
-    size:                        64px;
+    size:                        160px;
     cursor:                      inherit;
 }
 element-text {
