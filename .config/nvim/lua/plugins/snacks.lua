@@ -16,7 +16,15 @@ return {
         bigfile = { enabled = true },
         indent = { enabled = true },
         explorer = { enabled = true },
-        image = { enabled = true },
+        image = {
+            enabled = true,
+            -- `doc` treesitter-scans buffers (markdown, etc.) to find embedded
+            -- images. On the treesitter `master` branch (e.g. inside the devpod
+            -- container, where tree-sitter-cli isn't available) a language-injection
+            -- bug can make this crash and take down treesitter highlighting for
+            -- the whole session. Only scan docs when running the `main` branch.
+            doc = { enabled = vim.g.treesitter_branch == 'main' },
+        },
         input = {
             enabled = true,
             icon = " ",

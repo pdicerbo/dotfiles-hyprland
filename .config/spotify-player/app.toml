@@ -1,5 +1,6 @@
 theme = "CleanWinter"
 client_id = "d420a117a32841c2b3474932e49fb54b"
+client_id_command = { command = "cat", args = ["/home/pierluigi/.config/spotify-player/ArchLinux4JoyToken"] }
 client_port = 8080
 login_redirect_uri = "http://127.0.0.1:8989/login"
 playback_format = """
@@ -36,7 +37,7 @@ enable_notify = true
 enable_cover_image_cache = true
 default_device = "spotify-player"
 notify_streaming_only = false
-seek_duration_secs = 5
+seek_duration_secs = 15
 sort_artist_albums_by_type = false
 volume_scroll_step = 5
 enable_mouse_scroll_volume = true
@@ -54,10 +55,10 @@ playlist_percent = 40
 album_percent = 40
 
 [device]
-name = "spotify-player"
+name = "ArchLinux-Work"
 device_type = "speaker"
 volume = 70
 bitrate = 320
 audio_cache = false
 normalization = false
-autoplay = false
+autoplay = true

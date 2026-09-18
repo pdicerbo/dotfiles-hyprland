@@ -14,9 +14,9 @@ git:
     order: "author-date-order"
     showWholeGraph: true
   autoForwardBranches: none
-  pagers:
+  diffRenderers:
     - colorArg: always
-      pager: delta --dark --paging=never --side-by-side
+      command: delta --dark --paging=never --side-by-side
 customCommands:
   - key: '<f1>'
     description: "Pull from a specific remote repository"

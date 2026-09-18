@@ -161,6 +161,64 @@ local treesitter_languages = {
     "yaml"
 }
 
+-- Compat shim: nvim-treesitter's custom query directives (query_predicates.lua:
+-- set-lang-from-info-string!, set-lang-from-mimetype!, downcase!, ...) assume a
+-- query capture always resolves to a single TSNode and call
+-- vim.treesitter.get_node_text(node, ...) directly on it. On this Neovim
+-- version, query-match captures can come back as a *list* of nodes instead;
+-- nvim-treesitter's own compat shim for that (`{ all = false }`) doesn't fully
+-- prevent it, so `node` ends up being a one-element list, and
+-- get_node_text -> get_range crashes with "attempt to call method 'range'
+-- (a nil value)" -- e.g. when resolving the language of a ```lang fenced code
+-- block in a markdown file (queries/markdown/injections.scm uses
+-- set-lang-from-info-string!). That crash takes down the shared treesitter
+-- decoration provider (ALL highlighting, not just the buffer being parsed)
+-- until <leader>Tr or a restart. Unwrap defensively at the one choke point
+-- every affected directive funnels through, so this never reaches get_range.
+do
+    local orig_get_node_text = vim.treesitter.get_node_text
+    vim.treesitter.get_node_text = function(node, source, opts)
+        if type(node) == 'table' and node.range == nil then
+            node = node[1]
+        end
+        if node == nil then return '' end
+        return orig_get_node_text(node, source, opts)
+    end
+end
+
+-- Recover from a crashed treesitter highlighter without a full nvim restart.
+-- Neovim registers ONE global decoration provider for treesitter highlighting
+-- at startup; if a callback errors (e.g. a language-injection bug triggered by
+-- some plugin parsing a buffer), nvim disables that provider for the rest of
+-- the session and highlighting drops out everywhere, even in unrelated buffers.
+-- Reloading the highlighter module re-registers it.
+-- NOTE: this must be registered before the branch-dependent early `return`
+-- below, since it relies only on the built-in `vim.treesitter` API and needs
+-- to work on both the `main` and `master` nvim-treesitter branches.
+vim.keymap.set('n', '<leader>Tr', function()
+    -- `vim.treesitter` caches its `.highlighter` submodule as a plain field the
+    -- first time it's accessed (see vim._defer_require): dropping the cache and
+    -- clearing package.loaded forces a fresh require (and re-registration of the
+    -- decoration provider) the next time anything touches vim.treesitter.highlighter.
+    package.loaded['vim.treesitter.highlighter'] = nil
+    (vim.treesitter --[[@as table]]).highlighter = nil
+
+    local ok, err = pcall(function() return vim.treesitter.highlighter end)
+    if not ok then
+        vim.notify('Failed to reload treesitter highlighter: ' .. err, vim.log.levels.ERROR)
+        return
+    end
+
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(buf) then
+            pcall(vim.treesitter.stop, buf)
+            pcall(vim.treesitter.start, buf)
+        end
+    end
+
+    vim.notify('Treesitter highlighter reloaded', vim.log.levels.INFO)
+end, { desc = 'Restart treesitter highlighting engine (recover from a crash without restarting nvim)' })
+
 if vim.g.treesitter_branch ~= 'main' then return {
     {
         "nvim-treesitter/nvim-treesitter",

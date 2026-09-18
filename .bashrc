@@ -6,7 +6,8 @@
 [[ $- != *i* ]] && return
 
 alias ls='ls --color=auto'
-alias ll='eza -l'
+alias ll='eza --icons -l'
+alias la='ll -a'
 alias grep='grep --color=auto'
 alias pacman='pacman --color=auto'
 alias diff='diff --color=auto'
@@ -47,5 +48,7 @@ fi
 
 # setxkbmap -option compose:rwin
 
+# Secrets are kept outside the repo, in an untracked file
+[ -f "$HOME/.bashrc.secrets" ] && . "$HOME/.bashrc.secrets"
 export GOPATH=$HOME/.local/go
 fastfetch
