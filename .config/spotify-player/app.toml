@@ -55,7 +55,7 @@ playlist_percent = 40
 album_percent = 40
 
 [device]
-name = "ArchLinux-Work"
+name = "ArchLinux-Personal"
 device_type = "speaker"
 volume = 70
 bitrate = 320

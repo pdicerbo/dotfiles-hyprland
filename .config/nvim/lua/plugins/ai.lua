@@ -130,10 +130,8 @@ return {
                 pattern = "*",
                 callback = function()
                     local opts = { buffer = 0 }
-                    -- <C-q> and <Esc><Esc> both exit terminal-insert mode (<C-\><C-n>).
-                    -- Two options are provided so muscle memory from different workflows works.
+                    -- <C-q> exit terminal-insert mode (<C-\><C-n>).
                     vim.keymap.set("t", "<C-q>", "<C-\\><C-n>", opts)
-                    vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", opts)
                     -- Once in normal mode, <C-q> closes the terminal window entirely.
                     -- This makes the full dismiss flow: <C-q> (exit insert) → <C-q> (close).
                     vim.keymap.set("n", "<C-q>", ":q<CR>", opts)
