@@ -113,6 +113,24 @@ end, { desc = "Toggle line wrap (both diff sides)" })
 -- reopen latest buffer (historically used)
 vim.keymap.set("n", "<leader>bb", "<cmd>b#<CR>", { desc = "Reopen latest buffer" })
 
+-- new empty buffer
+vim.keymap.set("n", "<leader>bn", "<cmd>enew<CR>", { desc = "New empty buffer" })
+
+-- Close the neighbouring split in a given direction (no wrap-around, focus stays here)
+local function kill_split(dir)
+    local target = vim.fn.winnr(dir)
+    if target == vim.fn.winnr() then
+        vim.notify("No split in that direction", vim.log.levels.INFO)
+        return
+    end
+    vim.api.nvim_win_close(vim.fn.win_getid(target), false)
+end
+
+for key, dir in pairs({ h = "h", j = "j", k = "k", l = "l" }) do
+    vim.keymap.set("n", "<leader>k" .. key, function() kill_split(dir) end,
+        { desc = "Kill split on the " .. ({ h = "left", j = "bottom", k = "top", l = "right" })[dir] })
+end
+
 -- Close current tab with Alt+w
 vim.keymap.set("n", "<M-w>", "<cmd>tabclose<CR>", { desc = "Close current tab (Alt-w)" })
 

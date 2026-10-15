@@ -254,6 +254,11 @@ M.commands = {
     },
 
     {
+        name = "Buffer: New Empty",
+        action = ":enew",
+    },
+
+    {
         name = "Attempt: New Snippet Buffer",
         action = function()
             require("attempt").new_select()
