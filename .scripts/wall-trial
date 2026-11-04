@@ -1,0 +1,185 @@
+#!/usr/bin/env bash
+#
+# Try out candidate wallpapers one at a time, then keep or delete each one.
+#
+#   wall-trial [dir]         start a trial on the images in dir (default: $HOME, no subfolders)
+#   wall-trial accept walls  move the current image to ~/.config/wallpapers, show the next one
+#   wall-trial accept aonix  move the current image to ~/.config/aonix-walls, show the next one
+#   wall-trial reject        delete the current image, show the next one
+#   wall-trial skip          leave the current image where it is, show the next one
+#   wall-trial abort         stop the trial and restore the previous wallpaper
+#
+# The actions are bound to Ctrl+Super+{y,h,d,s,Escape} in ~/.config/hypr/keybinds.lua
+# and do nothing when no trial is running. Wallpapers are set through hyprpaper (>= 0.8).
+
+WALLS_DIR="$HOME/.config/wallpapers"
+AONIX_DIR="$HOME/.config/aonix-walls"
+STATE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/wall-trial"
+QUEUE_FILE="$STATE_DIR/queue"          # remaining images, the first line is the one on screen
+STATS_FILE="$STATE_DIR/stats"          # accepted rejected skipped total
+NOTIFY_ID_FILE="$STATE_DIR/notify_id"  # lets each status notification replace the previous one
+PREVIOUS_FILE="$STATE_DIR/previous"    # "monitor: path" lines saved at start, restored at the end
+# hyprpaper fit mode: cover (crop to fill, hyprpaper's default and what wall-changer uses),
+# contain (whole image with borders), fit (stretch), tile
+WALL_FIT="cover"
+KEYS_HINT="Ctrl+Super +  y: wallpapers  h: aonix  d: delete  s: skip  Esc: quit"
+
+mkdir -p "$STATE_DIR"
+
+# A key press arriving while the previous one is still being handled is dropped,
+# so a double press can't delete two images.
+exec 9>"$STATE_DIR/lock"
+flock -n 9 || exit 0
+
+# $1 = monitor (empty = all), $2 = image path
+set_wall() {
+    hyprctl hyprpaper wallpaper "$1,$2,$WALL_FIT" > /dev/null 2>&1 \
+        || warn "hyprpaper could not set $(basename "$2") (is hyprpaper running?)"
+}
+
+restore_wall() {
+    local line
+    while IFS= read -r line; do
+        [ -n "${line#*: }" ] && set_wall "${line%%: *}" "${line#*: }"
+    done < "$PREVIOUS_FILE"
+}
+
+status() {
+    local id args=(-a wall-trial -t 8000 -p)
+    id=$(cat "$NOTIFY_ID_FILE" 2>/dev/null)
+    [ -n "$id" ] && args+=(-r "$id")
+    notify-send "${args[@]}" "$1" "$2" > "$NOTIFY_ID_FILE"
+}
+
+warn() {
+    notify-send -a wall-trial -u critical "wall-trial" "$1"
+}
+
+bump() {
+    local stats
+    read -r -a stats < "$STATS_FILE"
+    stats[$1]=$((stats[$1] + 1))
+    echo "${stats[*]}" > "$STATS_FILE"
+}
+
+finish() {
+    local acc rej skip total
+    read -r acc rej skip total < "$STATS_FILE"
+    # an image accepted as the last action stays on screen, it is a real wallpaper now
+    [ "$1" = accept ] || restore_wall
+    rm -f "$QUEUE_FILE" "$STATS_FILE" "$PREVIOUS_FILE"
+    status "Wallpaper trial finished" "kept $acc, deleted $rej, skipped $skip (of $total)"
+    rm -f "$NOTIFY_ID_FILE"
+}
+
+show_next() {
+    local current acc rej skip total
+    while [ -s "$QUEUE_FILE" ]; do
+        current=$(head -n 1 "$QUEUE_FILE")
+        if [ -f "$current" ]; then
+            read -r acc rej skip total < "$STATS_FILE"
+            set_wall "" "$current"
+            status "Wallpaper trial $((acc + rej + skip + 1))/$total" "$(basename "$current")"$'\n\n'"$KEYS_HINT"
+            return
+        fi
+        # removed by hand meanwhile
+        sed -i '1d' "$QUEUE_FILE"
+        bump 2
+    done
+    finish "$1"
+}
+
+start() {
+    local dir
+    dir=$(realpath -e -- "${1:-$HOME}" 2>/dev/null)
+    if [ ! -d "$dir" ]; then
+        warn "Not a folder: ${1:-$HOME}"
+        exit 1
+    fi
+    if [ "$dir" = "$(realpath "$WALLS_DIR")" ] || [ "$dir" = "$(realpath "$AONIX_DIR")" ]; then
+        warn "$dir is already a wallpaper folder"
+        exit 1
+    fi
+
+    find "$dir" -maxdepth 1 -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) | sort > "$QUEUE_FILE"
+    # hyprctl splits its argument on commas, so these can't be shown
+    local commas
+    commas=$(grep -c ',' "$QUEUE_FILE")
+    if [ "$commas" -gt 0 ]; then
+        sed -i '/,/d' "$QUEUE_FILE"
+        warn "$commas image(s) with a comma in the name skipped: rename them to try them"
+    fi
+    if [ ! -s "$QUEUE_FILE" ]; then
+        rm -f "$QUEUE_FILE"
+        warn "No images found in $dir"
+        exit 1
+    fi
+    # keep the wallpaper of a trial that was started over, it is the real previous one
+    [ -s "$PREVIOUS_FILE" ] || hyprctl hyprpaper listactive > "$PREVIOUS_FILE" 2>/dev/null
+    echo "0 0 0 $(wc -l < "$QUEUE_FILE")" > "$STATS_FILE"
+    show_next
+}
+
+accept() {
+    local dest current name stem ext target n=1
+    case "$1" in
+        walls) dest="$WALLS_DIR" ;;
+        aonix) dest="$AONIX_DIR" ;;
+        *) warn "accept: unknown destination '$1' (use walls or aonix)"; exit 1 ;;
+    esac
+
+    current=$(head -n 1 "$QUEUE_FILE")
+    name=$(basename "$current")
+    stem="${name%.*}"
+    ext="${name##*.}"
+    target="$dest/$name"
+    while [ -e "$target" ]; do
+        target="$dest/$stem-$n.$ext"
+        n=$((n + 1))
+    done
+    if [ "$target" != "$dest/$name" ]; then
+        warn "'$name' already exists in $(basename "$dest"), saved as '$(basename "$target")'"
+    fi
+
+    if ! mv -n -- "$current" "$target"; then
+        warn "Could not move '$name' to $dest"
+        exit 1
+    fi
+    sed -i '1d' "$QUEUE_FILE"
+    bump 0
+    show_next accept
+}
+
+reject() {
+    rm -f -- "$(head -n 1 "$QUEUE_FILE")"
+    sed -i '1d' "$QUEUE_FILE"
+    bump 1
+    show_next
+}
+
+skip() {
+    sed -i '1d' "$QUEUE_FILE"
+    bump 2
+    show_next
+}
+
+abort() {
+    restore_wall
+    rm -f "$QUEUE_FILE" "$STATS_FILE" "$PREVIOUS_FILE"
+    status "Wallpaper trial aborted" "the remaining images were left in place"
+    rm -f "$NOTIFY_ID_FILE"
+}
+
+case "$1" in
+    accept|reject|skip|abort)
+        # the keybinds are always active: do nothing when no trial is running
+        [ -s "$QUEUE_FILE" ] || exit 0
+        "$@"
+        ;;
+    start)
+        start "$2"
+        ;;
+    *)
+        start "$1"
+        ;;
+esac

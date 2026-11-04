@@ -153,7 +153,6 @@ local treesitter_languages = {
     "svelte",
     "tsx",
     "typst",
-    "tmux",
     "vim",
     "vimdoc",
     "vue",

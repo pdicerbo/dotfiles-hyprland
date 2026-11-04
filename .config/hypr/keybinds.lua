@@ -24,6 +24,13 @@ hl.bind(mainMod .. " + space", hl.dsp.exec_cmd(programs.dmenu))
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("sh ~/.scripts/set-default-wall"))
 hl.bind(mainMod .. " + SHIFT + E", hl.dsp.exec_cmd("sh ~/.scripts/wall-changer"))
 hl.bind(mainMod .. " + SHIFT + H", hl.dsp.exec_cmd("sh ~/.scripts/aonix-wall-changer"))
+
+-- Wallpaper trial (start it with: wall-trial [dir]); these do nothing when no trial is running
+hl.bind(mainMod .. " + CTRL + y", hl.dsp.exec_cmd("bash ~/.scripts/wall-trial accept walls"))
+hl.bind(mainMod .. " + CTRL + h", hl.dsp.exec_cmd("bash ~/.scripts/wall-trial accept aonix"))
+hl.bind(mainMod .. " + CTRL + d", hl.dsp.exec_cmd("bash ~/.scripts/wall-trial reject"))
+hl.bind(mainMod .. " + CTRL + s", hl.dsp.exec_cmd("bash ~/.scripts/wall-trial skip"))
+hl.bind(mainMod .. " + CTRL + Escape", hl.dsp.exec_cmd("bash ~/.scripts/wall-trial abort"))
 hl.bind("PRINT", hl.dsp.exec_cmd("hyprshot -m region -o ~/Pictures/"))
 hl.bind("SHIFT + PRINT", hl.dsp.exec_cmd("hyprshot -m window -o ~/Pictures/"))
 hl.bind(mainMod .. " + l", hl.dsp.exec_cmd("hyprlock"))

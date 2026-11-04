@@ -225,6 +225,11 @@ return {
                     enabled = false
                 }
             },
+            copilot = {
+                status = {
+                    level = vim.log.levels.OFF,
+                },
+            },
         },
         keys = {
             {

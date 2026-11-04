@@ -1,6 +1,7 @@
 gui:
-  authorColors:
-    'Pierluigi Di Cerbo': 'blue'
+  theme:
+    authorColors:
+      'Pierluigi Di Cerbo': 'blue'
 git:
   autoStageResolvedConflicts: false
   commit:
@@ -68,3 +69,15 @@ customCommands:
         suggestions:
           command: "git branch --remote --list '{{.Form.Remote}}/*' --format='%(refname:short)' | sed 's/{{.Form.Remote}}\\///'"
     loadingText: 'Fetching branch...'
+  - key: '<c-b>'
+    description: 'Show which branches contain this commit'
+    context: 'commits'
+    output: popup
+    outputTitle: "Commit's branch membership"
+    command: >-
+      printf '\033[1;36m== In current branch (HEAD)? ==\033[0m\n';
+      git merge-base --is-ancestor {{.SelectedLocalCommit.Hash}} HEAD && printf '\033[1;32mYES\033[0m\n' || printf '\033[1;31mNO\033[0m\n';
+      printf '\n\033[1;32m== Branches CONTAINING it ==\033[0m\n';
+      git branch --color=always -a --contains {{.SelectedLocalCommit.Hash}};
+      printf '\n\033[1;31m== Branches NOT containing it ==\033[0m\n';
+      git branch --color=always -a --no-contains {{.SelectedLocalCommit.Hash}}
